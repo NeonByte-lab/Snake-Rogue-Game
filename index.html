@@ -4,120 +4,1476 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#080d19">
 <title>Snake Rogue — Dungeon Run</title>
 <style>
-:root{--bg:#080d19;--panel:#111d32;--line:#2b4262;--text:#edf5ff;--muted:#91a5c3;--green:#55f5a5;--cyan:#43d9ff;--gold:#ffd166;--red:#ff5578;--purple:#c58aff}
-*{box-sizing:border-box}body{margin:0;padding:20px 12px;background:radial-gradient(ellipse at top,#1b3155,var(--bg) 65%);color:var(--text);font-family:system-ui,Segoe UI,sans-serif}button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid white;outline-offset:3px}.app{max-width:1080px;margin:auto}.brand{text-align:center;margin-bottom:18px}.brand small{color:var(--cyan);letter-spacing:4px;font-weight:900}.brand h1{font-size:clamp(34px,6vw,52px);line-height:1;margin:8px 0;letter-spacing:-2px}.brand h1 span{color:var(--green)}.brand p{color:var(--muted);font-size:13px;margin:0}
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:14px;align-items:start}.panel{padding:13px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#14223c,#0d1729);box-shadow:0 14px 38px #0004}.hud{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}.metric{padding:8px;background:#091326;border:1px solid #263b5a;border-radius:10px;min-width:0}.metric label{display:block;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}.metric strong{font-size:19px;font-variant-numeric:tabular-nums}.metric small{display:block;color:var(--cyan);font-size:10px}.board{position:relative;border:2px solid #207c9e;border-radius:11px;overflow:hidden;background:#071020;box-shadow:0 0 25px #12caff20}canvas{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none}.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:16px;background:#050a15df;backdrop-filter:blur(6px);text-align:center}.overlay.off{display:none}.dialog{width:min(100%,380px)}.emoji{font-size:42px}.dialog h2{margin:6px 0;font-size:25px}.dialog p{font-size:13px;color:var(--muted);line-height:1.55}.btn{padding:11px 14px;border:1px solid transparent;border-radius:10px;font-size:12px;font-weight:900}.primary{background:var(--green);color:#052116}.secondary{background:#192a47;border-color:#345174;color:var(--text)}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.bossbar{margin-top:9px;padding:9px;background:#210f20;border:1px solid #67304d;border-radius:10px}.bossbar.hide{display:none}.bosshead{display:flex;justify-content:space-between;font-size:10px;color:#ff9bb4;font-weight:900;margin-bottom:6px}.bar{height:8px;border-radius:99px;background:#482033;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#ff416d,#ffae78);transition:width .2s}.side-title{font-size:11px;letter-spacing:1.4px;color:var(--cyan);font-weight:900;margin:2px 0 10px}.block+.block{border-top:1px solid var(--line);margin-top:13px;padding-top:13px}.room{padding:10px;border:1px solid #29405f;border-radius:10px;background:#091426}.room b{font-size:13px}.room p{font-size:11px;color:var(--muted);line-height:1.4;margin:4px 0}.track{display:flex;gap:5px}.track i{height:5px;flex:1;border-radius:8px;background:#293750}.track .done{background:var(--green)}.track .current{background:var(--gold)}.item{display:grid;grid-template-columns:35px 1fr;gap:8px;align-items:center;margin:9px 0}.ico{width:35px;height:35px;border-radius:9px;background:#0a1427;border:1px solid #2b4568;display:grid;place-items:center;font-size:18px}.item b{font-size:11px;display:block}.item small{font-size:10px;color:var(--muted);line-height:1.3}.log{max-height:130px;overflow:auto;font-size:10px;color:var(--muted);line-height:1.5}.log div{padding:4px 0;border-bottom:1px solid #1c2b43}.mobile{display:none;grid-template-columns:repeat(3,45px);grid-template-rows:repeat(2,40px);gap:5px;justify-content:center;margin-top:12px}.mobile button{background:#192944;color:white;border:1px solid #345174;border-radius:9px;font-size:18px}.up{grid-column:2}.left{grid-column:1;grid-row:2}.down{grid-column:2;grid-row:2}.right{grid-column:3;grid-row:2}.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}.choice{padding:10px;text-align:left;min-height:112px;border:1px solid #3a5274;border-radius:10px;background:#10203a;color:var(--text)}.choice:hover{border-color:var(--green)}.choice span{font-size:22px}.choice b{display:block;font-size:11px;margin:4px 0}.choice small{font-size:10px;color:var(--muted);line-height:1.3}.bottom{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.help{font-size:11px;line-height:1.8;color:var(--muted)}.help b{color:var(--text)}.legend{font-size:10px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}.toast{position:absolute;top:10px;left:50%;transform:translateX(-50%);padding:7px 12px;border:1px solid #3d6686;border-radius:99px;background:#09172a;color:white;font-size:11px;font-weight:800;opacity:0;pointer-events:none;transition:opacity .2s}.toast.show{opacity:1}.footer{text-align:center;color:#617493;font-size:10px;margin:14px 0}
-@media(max-width:800px){.layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr;gap:12px}.block+.block{border:0;margin:0;padding:0}.mobile{display:grid}}
-@media(max-width:520px){body{padding:14px 8px}.metric{padding:6px}.metric strong{font-size:16px}.metric label{font-size:8px}.sidebar,.bottom{grid-template-columns:1fr}.choices{grid-template-columns:1fr}.choice{min-height:0;display:grid;grid-template-columns:30px 1fr;column-gap:8px}.choice span{grid-row:span 2}}
+:root{--bg:#080d19;--panel:#111d32;--line:#2b4262;--text:#edf5ff;--muted:#91a5c3;--green:#55f5a5;--cyan:#43d9ff;--gold:#ffd166;--red:#ff5578;--purple:#c58aff;--orange:#ff9f43}
+*{box-sizing:border-box}body{margin:0;padding:18px 12px;background:radial-gradient(ellipse at top,#1b3155,var(--bg) 65%);color:var(--text);font-family:system-ui,Segoe UI,sans-serif}button{font:inherit;cursor:pointer}button:focus-visible{outline:3px solid white;outline-offset:3px}.app{max-width:1160px;margin:auto}.brand{text-align:center;margin-bottom:14px}.brand small{color:var(--cyan);letter-spacing:4px;font-weight:900}.brand h1{font-size:clamp(30px,5vw,48px);line-height:1;margin:6px 0;letter-spacing:-2px}.brand h1 span{color:var(--green)}.brand p{color:var(--muted);font-size:13px;margin:0}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 325px;gap:14px;align-items:start}.panel{padding:13px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#14223c,#0d1729);box-shadow:0 14px 38px #0006}.hud{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:10px}.metric{padding:8px;background:#091326;border:1px solid #263b5a;border-radius:10px;min-width:0;position:relative;overflow:hidden}.metric label{display:block;font-size:9px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}.metric strong{font-size:17px;font-variant-numeric:tabular-nums;display:block;margin:2px 0}.metric small{display:block;color:var(--cyan);font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hp-wrap{margin:4px 0 3px;height:8px;border-radius:99px;background:#241224;border:1px solid #4a213d;overflow:hidden;position:relative}.hp-fill{display:block;height:100%;width:100%;background:linear-gradient(90deg,#ff3366,#ff7b54,#55f5a5);transition:width .25s cubic-bezier(.2,.9,.3,1)}.xp-wrap{margin-top:4px;height:5px;border-radius:99px;background:#0f243c;overflow:hidden}.xp-fill{display:block;height:100%;width:0%;background:linear-gradient(90deg,#43d9ff,#55f5a5);transition:width .25s}
+.board{position:relative;border:2px solid #207c9e;border-radius:12px;overflow:hidden;background:#071020;box-shadow:0 0 28px #12caff25}canvas{display:block;width:100%;height:auto;aspect-ratio:1;touch-action:none}.overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:14px;background:#050a15e8;backdrop-filter:blur(8px);text-align:center;z-index:15}.overlay.off{display:none}.dialog{width:min(100%,520px);max-height:95%;overflow-y:auto;padding:6px}.emoji{font-size:36px}.dialog h2{margin:4px 0;font-size:22px}.dialog p{font-size:12px;color:var(--muted);line-height:1.45;margin:5px 0 10px}
+.btn{padding:10px 14px;border:1px solid transparent;border-radius:10px;font-size:12px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:transform .12s,filter .15s}.btn:active{transform:scale(.97)}.primary{background:linear-gradient(135deg,var(--green),#2ce080);color:#042315;box-shadow:0 4px 14px #55f5a533}.secondary{background:#192a47;border-color:#345174;color:var(--text)}.secondary:hover{border-color:var(--cyan)}.gold-btn{background:linear-gradient(135deg,#ffd166,#f4a261);color:#261700;border-color:#ffe49e;box-shadow:0 4px 14px #ffd16633}.btn:disabled{opacity:0.4;cursor:not-allowed}
+.combat-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(108px,1fr));gap:6px;margin:9px 0}.combat-btn{padding:9px 8px;background:#10223d;border:1px solid #2d4c75;border-radius:9px;color:var(--text);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:5px;transition:all .15s}.combat-btn:hover:not(:disabled){background:#18325a;border-color:var(--cyan)}.combat-btn.active{background:#1a4332;border-color:var(--green);color:var(--green)}.combat-btn.shop-btn{background:#2a2112;border-color:#8a6a26;color:var(--gold)}.combat-btn.shop-btn:hover{background:#3d2f18;border-color:var(--gold)}.combat-btn.hero-btn{background:#1f1638;border-color:#6842a8;color:#dfc2ff}.combat-btn.hero-btn:hover{background:#2d1f52;border-color:#c58aff}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.bossbar{margin-top:9px;padding:9px 11px;background:linear-gradient(180deg,#261024,#180917);border:1px solid #82345d;border-radius:10px;box-shadow:0 0 18px #ff416d25}.bossbar.hide{display:none}.bosshead{display:flex;justify-content:space-between;font-size:10px;color:#ff9bb4;font-weight:900;margin-bottom:6px;letter-spacing:.6px}.bar{height:9px;border-radius:99px;background:#3d1629;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#ff2a5f,#ff9f43,#ffd166);transition:width .2s}
+.side-title{font-size:11px;letter-spacing:1.4px;color:var(--cyan);font-weight:900;margin:2px 0 8px;display:flex;align-items:center;justify-content:space-between}.block+.block{border-top:1px solid var(--line);margin-top:11px;padding-top:11px}.room{padding:10px;border:1px solid #29405f;border-radius:10px;background:#091426}.room b{font-size:13px}.room p{font-size:11px;color:var(--muted);line-height:1.4;margin:4px 0}.track{display:flex;gap:5px;margin-top:6px}.track i{height:5px;flex:1;border-radius:8px;background:#293750}.track .done{background:var(--green)}.track .current{background:var(--gold)}
+.char-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;max-height:245px;overflow-y:auto;padding-right:2px}.char-btn{padding:7px 8px;border:1px solid #294469;border-radius:9px;background:#0b172c;color:var(--text);text-align:left;display:grid;grid-template-columns:28px 1fr;gap:7px;align-items:center;transition:all .15s}.char-btn:hover{border-color:var(--cyan);background:#122444}.char-btn.selected{border-color:var(--green);background:#12332b;box-shadow:0 0 12px #55f5a525}.char-btn span{font-size:19px;text-align:center}.char-btn b{font-size:10.5px;display:block;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.char-btn small{font-size:9px;color:var(--muted);display:block;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero-roster{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:8px 0;text-align:left}.roster-card{padding:8px 9px;border:1px solid #2e4a72;border-radius:10px;background:#0c1930;color:var(--text);display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center;transition:all .15s}.roster-card:hover{border-color:var(--cyan);background:#14284a}.roster-card.selected{border-color:var(--green);background:#113229;box-shadow:0 0 15px #55f5a530}.roster-ico{width:34px;height:34px;border-radius:9px;background:#071120;border:1px solid #2b476e;display:grid;place-items:center;font-size:20px}.roster-card b{font-size:11px;display:block;color:#fff}.roster-card small{font-size:9.5px;color:var(--cyan);display:block;margin:1px 0}.roster-card em{font-style:normal;font-size:9px;color:var(--muted);display:block;line-height:1.2}
+.weapon-card{padding:9px;border:1px solid #2a4870;border-radius:10px;background:linear-gradient(135deg,#0c1a32,#13284c);display:grid;grid-template-columns:38px 1fr;gap:9px;align-items:center}.weapon-ico{font-size:22px;width:38px;height:38px;border-radius:9px;background:#081326;border:1px solid #365a88;display:grid;place-items:center}.weapon-card b{display:block;font-size:12px;color:var(--cyan)}.weapon-card small{font-size:10px;color:var(--muted);display:block}
+.item{display:grid;grid-template-columns:32px 1fr;gap:8px;align-items:center;margin:7px 0}.ico{width:32px;height:32px;border-radius:8px;background:#0a1427;border:1px solid #2b4568;display:grid;place-items:center;font-size:16px}.item b{font-size:11px;display:block}.item small{font-size:9.5px;color:var(--muted);line-height:1.25}.log{max-height:105px;overflow:auto;font-size:10px;color:var(--muted);line-height:1.45}.log div{padding:3px 0;border-bottom:1px solid #1c2b43}
+.mobile{display:none;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,42px);gap:6px;justify-content:center;margin-top:12px}.mobile button{background:#192944;color:white;border:1px solid #345174;border-radius:9px;font-size:18px}.up{grid-column:2}.left{grid-column:1;grid-row:2}.down{grid-column:2;grid-row:2}.right{grid-column:3;grid-row:2}
+.mobile-combat{display:none;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.choices{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.choice{padding:9px;text-align:left;min-height:105px;border:1px solid #3a5274;border-radius:10px;background:#10203a;color:var(--text);transition:all .15s}.choice:hover:not(:disabled){border-color:var(--green);transform:translateY(-2px)}.choice span{font-size:21px}.choice b{display:block;font-size:11px;margin:4px 0}.choice small{font-size:9.5px;color:var(--muted);line-height:1.25;display:block}
+.shop-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin:10px 0;text-align:left}.shop-item{padding:9px;border:1px solid #3d5478;border-radius:10px;background:#0e1c33;color:var(--text);display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:center;transition:all .15s}.shop-item:hover:not(:disabled){border-color:var(--gold);background:#172947}.shop-item:disabled{opacity:.45;cursor:not-allowed}.shop-item .s-ico{font-size:20px;width:32px;height:32px;display:grid;place-items:center;background:#081223;border-radius:8px;border:1px solid #283e5e}.shop-item b{font-size:11px;display:block;color:#fff}.shop-item small{font-size:9.5px;color:var(--muted);display:block;line-height:1.2}.shop-price{padding:4px 7px;border-radius:7px;background:#2b2110;border:1px solid #8a6a26;color:var(--gold);font-size:10px;font-weight:900;white-space:nowrap}
+.bottom{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.help{font-size:11px;line-height:1.75;color:var(--muted)}.help b{color:var(--text)}.legend{font-size:10px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}.toast{position:absolute;top:10px;left:50%;transform:translateX(-50%);padding:7px 13px;border:1px solid #3d6686;border-radius:99px;background:#09172acc;backdrop-filter:blur(4px);color:white;font-size:11px;font-weight:800;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;white-space:nowrap;z-index:25}.toast.show{opacity:1;transform:translateX(-50%) translateY(2px)}.footer{text-align:center;color:#617493;font-size:10px;margin:14px 0}
+@media(max-width:880px){.layout{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr;gap:12px}.block+.block{border:0;margin:0;padding:0}.mobile{display:grid}.mobile-combat{display:grid}}
+@media(max-width:580px){body{padding:10px 6px}.hud{grid-template-columns:repeat(3,1fr)}.metric{padding:6px}.metric strong{font-size:15px}.metric label{font-size:8px}.sidebar,.bottom,.shop-grid,.hero-roster{grid-template-columns:1fr}.choices{grid-template-columns:1fr}.choice{min-height:0;display:grid;grid-template-columns:30px 1fr;column-gap:8px}.choice span{grid-row:span 2}}
 </style></head>
 <body><main class="app">
-<header class="brand"><small>DUNGEON CRAWLER • ARCADE ROGUELITE</small><h1>SNAKE <span>ROGUE</span></h1><p>Explore salas, evolua sua serpente e derrote o Guardião.</p></header>
+<header class="brand"><small>DUNGEON CRAWLER • ARCADE ROGUELITE</small><h1>SNAKE <span>ROGUE</span></h1><p>Escolha entre 8 heróis lendários com poderes únicos, visite a Loja e derrote os Chefes!</p></header>
 <div class="layout"><section class="panel">
 <div class="hud">
-<div class="metric"><label>Pontos</label><strong id="score">000</strong></div>
-<div class="metric"><label>Vida</label><strong id="health">♥♥♥</strong><small id="resources">🛡 0 • Pulso 2</small></div>
-<div class="metric"><label>Nível / XP</label><strong id="level">1</strong><small id="xp">0 / 5 XP</small></div>
+<div class="metric"><label>Pontos</label><strong id="score">000</strong><small id="bestLabel">Recorde: 0</small></div>
+<div class="metric"><label>Vida (<span id="hpNum">5/5</span>)</label><div class="hp-wrap"><i class="hp-fill" id="hpBar"></i></div><strong id="health" style="font-size:13px;line-height:1">♥♥♥♥♥</strong><small id="resources">🛡 2 • Pulso 3</small></div>
+<div class="metric"><label>Ouro</label><strong id="gold" style="color:var(--gold)">🪙 25</strong><small>Tecla B: Loja</small></div>
+<div class="metric"><label>Nível / XP</label><strong id="level">1</strong><div class="xp-wrap"><i class="xp-fill" id="xpBar"></i></div><small id="xp">0 / 4 XP</small></div>
 <div class="metric"><label>Sala</label><strong id="room">1</strong><small id="roomType">Combate</small></div>
 </div>
 <div class="board"><canvas id="game" width="600" height="600" aria-label="Tabuleiro do Snake Rogue"></canvas><div class="toast" id="toast"></div>
-<div class="overlay" id="overlay"><div class="dialog" id="dialog"><div class="emoji">🐍</div><h2>A dungeon espera por você</h2><p>Atravesse salas, colete relíquias e sobreviva. A cada terceira sala, um chefe bloqueia seu caminho.</p><button class="btn primary" id="mainBtn" style="width:100%">▶ Começar aventura</button><button class="btn secondary" id="helpBtn" style="width:100%;margin-top:7px">Como jogar</button></div></div></div>
-<div class="bossbar hide" id="bossbar"><div class="bosshead"><span>☠ GUARDIÃO DA MASMORRA</span><span id="bosstext">7 / 7</span></div><div class="bar"><i id="bosshp"></i></div></div>
+<div class="overlay" id="overlay"><div class="dialog" id="dialog">
+<div class="emoji">🐍</div><h2>Escolha seu Herói da Masmorra</h2>
+<p>Selecione um dos 8 personagens lendários abaixo (ou na barra lateral) para iniciar sua jornada!</p>
+<div class="hero-roster" id="overlayHeroGrid"></div>
+<button class="btn primary" id="mainBtn" style="width:100%">▶ Começar aventura</button>
+<button class="btn secondary" id="helpBtn" style="width:100%;margin-top:7px">Como jogar</button>
+</div></div></div>
+<div class="bossbar hide" id="bossbar"><div class="bosshead"><span id="bossTitle">☠ GUARDIÃO DA MASMORRA</span><span id="bosstext">5 / 5</span></div><div class="bar"><i id="bosshp"></i></div></div>
+
+<div class="combat-bar">
+<button class="combat-btn" id="shootBtn" title="Disparar arma equipada (Espaço ou Z)">🎯 Disparar (Espaço)</button>
+<button class="combat-btn" id="switchBtn" title="Trocar de arma (Q ou E)">🔄 Trocar Arma (Q/E)</button>
+<button class="combat-btn hero-btn" id="heroesBtn" title="Abrir Galeria de Personagens (Tecla H)">🦸 Heróis (H)</button>
+<button class="combat-btn shop-btn" id="shopBtn" title="Abrir a Loja do Mercador (Tecla B)">🏪 Loja (B)</button>
+<button class="combat-btn" id="autoBtn" title="Ativar ou desativar disparo automático">⚡ Auto-Tiro: DESLIGADO</button>
+<button class="combat-btn active" id="soundBtn" title="Ligar ou desligar efeitos sonoros">🔊 Som: LIGADO</button>
+</div>
+
 <div class="actions"><button class="btn primary" id="newBtn">↻ Nova aventura</button><button class="btn secondary" id="pauseBtn" disabled>Ⅱ Pausar</button></div>
+
 <div class="mobile"><button class="up" data-dir="up">▲</button><button class="left" data-dir="left">◀</button><button class="down" data-dir="down">▼</button><button class="right" data-dir="right">▶</button></div>
+<div class="mobile-combat"><button class="combat-btn" id="mobShootBtn">🎯 Disparar</button><button class="combat-btn" id="mobPulseBtn">💥 Pulso (X)</button><button class="combat-btn shop-btn" id="mobShopBtn">🏪 Loja</button></div>
 </section>
 <aside class="panel sidebar">
+<div class="block"><div class="side-title"><span>🦸 PERSONAGENS (8)</span><small id="heroPass" style="color:var(--green);font-size:9px">Ágil & Venenosa</small></div>
+<div class="char-grid" id="charGrid">
+<button class="char-btn selected" data-hero="viper"><span>🐍</span><div><b>Víbora Esmeralda</b><small>+Vel • Dardos</small></div></button>
+<button class="char-btn" data-hero="drake"><span>🐲</span><div><b>Dragão Rubro</b><small>+Dano • Fogo</small></div></button>
+<button class="char-btn" data-hero="cyber"><span>🤖</span><div><b>Mecha-Serpente</b><small>+Escudos • Laser</small></div></button>
+<button class="char-btn" data-hero="shadow"><span>👻</span><div><b>Espectro</b><small>+Ouro/Ímã • Besta</small></div></button>
+<button class="char-btn" data-hero="frost"><span>❄️</span><div><b>Serpente Glacial</b><small>Congela • Gelo</small></div></button>
+<button class="char-btn" data-hero="volt"><span>⚡</span><div><b>Cobra Voltaica</b><small>Ultra-Vel • Raio</small></div></button>
+<button class="char-btn" data-hero="blood"><span>🩸</span><div><b>Hidra Carmesim</b><small>Vampiro • Foice</small></div></button>
+<button class="char-btn" data-hero="solar"><span>👑</span><div><b>Leviatã Celestial</b><small>Regen • Supernova</small></div></button>
+</div></div>
+<div class="block"><div class="side-title">🗡️ ARMA EQUIPADA</div><div class="weapon-card" id="weaponCard"><div class="weapon-ico" id="weaponIco">🎯</div><div><b id="weaponName">Dardos Venenosos</b><small id="weaponDesc">Tiro veloz em linha reta (Dano 2)</small></div></div></div>
 <div class="block"><div class="side-title">🗺 SALA ATUAL</div><div class="room"><b id="roomName">Entrada esquecida</b><p id="roomDesc">Uma sala silenciosa.</p><div class="track" id="track"><i class="current"></i><i></i><i></i><i></i><i></i></div></div></div>
-<div class="block"><div class="side-title">✨ RELÍQUIAS DA RUN</div><div id="relicList"><div class="item"><div class="ico">✨</div><div><b>Nenhuma relíquia</b><small>Suba de nível para escolher melhorias.</small></div></div></div></div>
-<div class="block"><div class="side-title">📜 DIÁRIO</div><div class="log" id="log"><div>› As portas estão fechadas...</div></div></div>
+<div class="block"><div class="side-title">✨ RELÍQUIAS DA RUN</div><div id="relicList"><div class="item"><div class="ico">✨</div><div><b>Nenhuma relíquia</b><small>Suba de nível ou compre na Loja.</small></div></div></div></div>
+<div class="block"><div class="side-title">📜 DIÁRIO</div><div class="log" id="log"><div>› Escolha seu personagem e comece!</div></div></div>
 </aside></div>
-<div class="bottom"><section class="panel"><div class="side-title">🎮 CONTROLES</div><div class="help"><b>Setas / WASD</b> movimentar<br><b>ESPAÇO</b> pausar<br><b>X</b> disparar pulso (gasta 1 carga)<br><b>1, 2 ou 3</b> escolher relíquia<br><b>Toque / deslize</b> no celular</div></section>
-<section class="panel"><div class="side-title">🧭 LEGENDA</div><div class="legend"><span><i class="dot" style="background:#55f5a5"></i>Serpente</span><span><i class="dot" style="background:#ff5578"></i>Inimigo</span><span><i class="dot" style="background:#ffd166"></i>Comida</span><span><i class="dot" style="background:#43d9ff"></i>XP</span><span><i class="dot" style="background:#c58aff"></i>Boss</span></div><p class="help">Combate, tesouro e descanso alternam na dungeon. A cada 3 salas, enfrente um Guardião.</p></section></div>
-<footer class="footer">HTML5 • CSS3 • JavaScript puro • Arquivo único • Recorde salvo localmente</footer></main>
+<div class="bottom"><section class="panel"><div class="side-title">🎮 CONTROLES, HERÓIS & LOJA</div><div class="help"><b>Setas / WASD</b> movimentar (bordas-portal teletransportam para o outro lado!)<br><b>ESPAÇO / Z</b> disparar • <b>Q / E</b> trocar arma • <b>H</b> Galeria de Heróis • <b>B</b> Loja<br><b>C</b> alternar Auto-Tiro • <b>X</b> pulso sônico • <b>P</b> pausar<br><b>8 Heróis Jogáveis:</b> Víbora, Dragão, Mecha, Espectro, Glacial, Voltaica, Hidra e Leviatã!</div></section>
+<section class="panel"><div class="side-title">🧭 BESTIÁRIO & PERSONAGENS DA MASMORRA</div><div class="legend"><span><i class="dot" style="background:#55f5a5"></i>Herói</span><span><i class="dot" style="background:#ff4d6d"></i>Rastejador</span><span><i class="dot" style="background:#b5179e"></i>Arqueiro</span><span><i class="dot" style="background:#ff9f43"></i>Mago</span><span><i class="dot" style="background:#48cae4"></i>Golem</span><span><i class="dot" style="background:#80ed99"></i>Necromante</span><span><i class="dot" style="background:#ffd166"></i>Assassino</span><span><i class="dot" style="background:#72efdd"></i>Valquíria</span><span><i class="dot" style="background:#f72585"></i>Bombardeiro</span></div><p class="help">Cada herói tem atributos, passivas, armas exclusivas (Lança Glacial, Foice Sanguinária, Arco Voltaico, Supernova) e visuais animados no tabuleiro!</p></section></div>
+<footer class="footer">HTML5 • CSS3 • JavaScript Puro • 8 Heróis • Bestiário Expandido • 60 FPS Interpolado</footer></main>
 <script>
 "use strict";
+class SoundFx{
+constructor(){this.ctx=null;this.enabled=true;this.noiseBuf=null}
+init(){
+if(!this.ctx){
+try{
+const AC=window.AudioContext||window.webkitAudioContext;
+this.ctx=new AC();
+const sr=this.ctx.sampleRate;
+this.noiseBuf=this.ctx.createBuffer(1,sr*0.35,sr);
+const data=this.noiseBuf.getChannelData(0);
+for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;
+}catch(e){}
+}
+if(this.ctx&&this.ctx.state==="suspended"){try{this.ctx.resume()}catch(e){}}
+}
+tone(f1,f2,type,dur,vol=0.07,delay=0){
+if(!this.enabled)return;this.init();if(!this.ctx)return;
+try{
+const t=this.ctx.currentTime+delay;
+const o=this.ctx.createOscillator(),g=this.ctx.createGain();
+o.type=type;
+o.frequency.setValueAtTime(Math.max(20,f1),t);
+if(f2!==f1)o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),t+dur);
+g.gain.setValueAtTime(vol,t);
+g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+o.connect(g);g.connect(this.ctx.destination);
+o.start(t);o.stop(t+dur);
+}catch(e){}
+}
+noise(dur=0.2,vol=0.1,filterFreq=800){
+if(!this.enabled)return;this.init();if(!this.ctx||!this.noiseBuf)return;
+try{
+const t=this.ctx.currentTime;
+const src=this.ctx.createBufferSource();
+src.buffer=this.noiseBuf;
+const flt=this.ctx.createBiquadFilter();
+flt.type="lowpass";flt.frequency.setValueAtTime(filterFreq,t);
+flt.frequency.exponentialRampToValueAtTime(120,t+dur);
+const g=this.ctx.createGain();
+g.gain.setValueAtTime(vol,t);
+g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+src.connect(flt);flt.connect(g);g.connect(this.ctx.destination);
+src.start(t);src.stop(t+dur);
+}catch(e){}
+}
+step(){this.tone(135,95,"sine",0.022,0.012)}
+warp(){this.tone(300,620,"sine",0.08,0.04)}
+shoot(w){
+if(!this.enabled)return;
+if(w==="spread"){this.tone(680,260,"sawtooth",0.08,0.045);this.tone(840,320,"triangle",0.07,0.035,0.02)}
+else if(w==="fire"){this.tone(240,85,"triangle",0.15,0.075);this.noise(0.11,0.05,600)}
+else if(w==="laser"||w==="volt"){this.tone(1150,380,"sine",0.1,0.055);this.tone(580,920,"square",0.08,0.025)}
+else if(w==="frost"){this.tone(920,480,"sine",0.11,0.05);this.tone(1380,690,"triangle",0.09,0.035,0.02)}
+else if(w==="scythe"){this.tone(320,160,"sawtooth",0.13,0.06);this.tone(480,240,"sine",0.1,0.04,0.03)}
+else if(w==="plasma"){this.tone(420,880,"sine",0.13,0.06);this.tone(880,220,"triangle",0.14,0.05,0.03)}
+else{this.tone(720,300,"square",0.055,0.04)}
+}
+enemyShot(){this.tone(310,150,"sawtooth",0.09,0.04)}
+hit(){this.tone(220,115,"square",0.055,0.055);this.noise(0.045,0.045,900)}
+kill(){this.tone(350,700,"triangle",0.09,0.06);this.noise(0.12,0.065,1100)}
+blast(){this.tone(140,42,"sawtooth",0.25,0.095);this.noise(0.22,0.1,700)}
+shieldBlock(){this.tone(520,880,"sine",0.1,0.065);this.tone(880,1180,"triangle",0.08,0.045,0.04)}
+hurt(){this.tone(160,55,"sawtooth",0.2,0.1);this.noise(0.16,0.08,450)}
+pickup(){this.tone(587,880,"sine",0.07,0.05);this.tone(880,1174,"sine",0.09,0.05,0.045)}
+coin(){this.tone(987,1318,"sine",0.07,0.055);this.tone(1318,1567,"sine",0.09,0.045,0.045)}
+buy(){[659,880,1046,1318].forEach((f,i)=>this.tone(f,f,"triangle",0.1,0.065,i*0.045))}
+orb(){this.tone(740,1046,"sine",0.055,0.035)}
+doorOpen(){[392,493,587,784].forEach((f,i)=>this.tone(f,f*1.02,"triangle",0.13,0.055,i*0.055))}
+levelUp(){[523,659,784,1046].forEach((f,i)=>this.tone(f,f,"sine",0.15,0.065,i*0.065))}
+weaponSwitch(){this.tone(440,660,"triangle",0.055,0.045)}
+}
+
 class SnakeRogue{
 constructor(){
-this.canvas=document.querySelector("#game");this.ctx=this.canvas.getContext("2d");this.$=id=>document.getElementById(id);this.N=25;this.C=24;this.state="ready";this.timer=null;this.anim=0;this.best=this.loadBest();this.toastTimer=null;this.touch=null;
+this.canvas=document.querySelector("#game");
+this.ctx=this.canvas.getContext("2d",{alpha:false});
+this.$=id=>document.getElementById(id);
+this.N=25;this.C=24;this.state="ready";this.timer=null;this.anim=0;
+this.tickStart=performance.now();this.tickDur=155;
+this.best=this.loadBest();this.toastTimer=null;this.touch=null;
+this.sfx=new SoundFx();
+this.autoFire=true;
+this.heroKey="viper";
 this.dirs={up:{x:0,y:-1},down:{x:0,y:1},left:{x:-1,y:0},right:{x:1,y:0}};
-this.relics={
-haste:{icon:"⚡",name:"Escamas velozes",desc:"Movimento 12% mais rápido.",apply:g=>g.haste=Math.min(4,g.haste+1)},
-shield:{icon:"🛡️",name:"Escudo arcano",desc:"Bloqueia um dano.",apply:g=>g.shields++},
-magnet:{icon:"🧲",name:"Ímã de éter",desc:"Atrai cristais de XP de mais longe.",apply:g=>g.magnet=Math.min(5,g.magnet+1)},
-heart:{icon:"💚",name:"Coração antigo",desc:"Recupera 1 vida.",apply:g=>g.hp=Math.min(g.maxHp,g.hp+1)},
-pulse:{icon:"💥",name:"Núcleo explosivo",desc:"Ganha uma carga de pulso.",apply:g=>g.pulses++},
-growth:{icon:"🐍",name:"Corpo ancestral",desc:"Cresce 2 segmentos e ganha 5 pontos.",apply:g=>{g.snake.push({...g.snake.at(-1)},{...g.snake.at(-1)});g.score+=5}}
-};
-this.reset();this.bind();this.ui();this.draw();requestAnimationFrame(t=>this.frame(t));
+
+this.heroes={
+viper:{
+id:"viper",name:"Víbora Esmeralda",icon:"🐍",tag:"Ágil & Venenosa",
+bio:"Equilibrada e veloz. Dispara dardos certeiros com recarga rápida.",
+head:"#79ffc2",body1:"#3de094",body2:"#24b36e",eye:"#052e1c",horn:"fangs",
+hp:5,shields:2,pulses:3,haste:1,magnet:1,bonusDmg:0,goldMult:1,startWeapon:"dart",vamp:false,shieldRegen:false
+},
+drake:{
+id:"drake",name:"Dragão Rubro",icon:"🐲",tag:"Chamas & Poder (+1 Dano)",
+bio:"Escamas vulcânicas. Começa com Orbe de Chamas e +1 de dano base.",
+head:"#ffae52",body1:"#ff5e36",body2:"#c92a2a",eye:"#2b0905",horn:"horns",
+hp:6,shields:1,pulses:3,haste:0,magnet:1,bonusDmg:1,goldMult:1,startWeapon:"fire",vamp:false,shieldRegen:false
+},
+cyber:{
+id:"cyber",name:"Mecha-Serpente",icon:"🤖",tag:"Blindada (4 Escudos & Laser)",
+bio:"Unidade cibernética com visor neon, 4 escudos iniciais e Canhão Arcano.",
+head:"#72efdd",body1:"#48bfe3",body2:"#3a86ff",eye:"#031926",horn:"visor",
+hp:5,shields:4,pulses:4,haste:0,magnet:2,bonusDmg:0.5,goldMult:1,startWeapon:"laser",vamp:false,shieldRegen:false
+},
+shadow:{
+id:"shadow",name:"Espectro Sombrio",icon:"👻",tag:"Caçador de Ouro (+50% Ouro)",
+bio:"Entidade astral que atrai relíquias de longe e multiplica todo ouro em 1.5x.",
+head:"#e0aaff",body1:"#9d4edd",body2:"#5a189a",eye:"#10002b",horn:"crown",
+hp:5,shields:2,pulses:3,haste:1,magnet:3,bonusDmg:0.5,goldMult:1.5,startWeapon:"spread",vamp:false,shieldRegen:false
+},
+frost:{
+id:"frost",name:"Serpente Glacial",icon:"❄️",tag:"Criomante (Congela Inimigos)",
+bio:"Imperatriz do gelo eterno. Sua Lança Glacial desacelera os inimigos atingidos!",
+head:"#caf0f8",body1:"#48cae4",body2:"#0077b6",eye:"#03045e",horn:"icecrown",
+hp:6,shields:3,pulses:3,haste:0,magnet:2,bonusDmg:0.5,goldMult:1,startWeapon:"frost",vamp:false,shieldRegen:false
+},
+volt:{
+id:"volt",name:"Cobra Voltaica",icon:"⚡",tag:"Tempestade (Vel. Máxima & Raio)",
+bio:"Pura energia elétrica! Move-se em velocidade relâmpago e dispara raios duplos.",
+head:"#fff3b0",body1:"#ffd166",body2:"#f77f00",eye:"#370617",horn:"antenna",
+hp:5,shields:2,pulses:4,haste:2,magnet:2,bonusDmg:0.5,goldMult:1.2,startWeapon:"volt",vamp:false,shieldRegen:false
+},
+blood:{
+id:"blood",name:"Hidra Carmesim",icon:"🩸",tag:"Imortal (7 Vidas & Vampirismo)",
+bio:"Colosso vampírico com 7 corações de vida, Foice Sanguinária e cura a cada sala.",
+head:"#ff758f",body1:"#ff4d6d",body2:"#a4133c",eye:"#2b0008",horn:"wings",
+hp:7,shields:1,pulses:3,haste:0,magnet:1,bonusDmg:0.5,goldMult:1,startWeapon:"scythe",vamp:true,shieldRegen:false
+},
+solar:{
+id:"solar",name:"Leviatã Celestial",icon:"👑",tag:"Divino (Escudo Por Sala & Plasma)",
+bio:"Guardião astral dourado. Já começa com a Supernova de Plasma e regenera +1 escudo por sala!",
+head:"#ffffff",body1:"#ffd166",body2:"#4cc9f0",eye:"#1d3557",horn:"halo",
+hp:6,shields:3,pulses:4,haste:1,magnet:2,bonusDmg:1,goldMult:1.2,startWeapon:"plasma",vamp:false,shieldRegen:true
 }
+};
+
+this.weapons={
+dart:{id:"dart",name:"Dardos Venenosos",icon:"🎯",desc:"Tiro veloz em linha reta (Dano 2)",color:"#55f5a5",dmg:2},
+spread:{id:"spread",name:"Besta Tríplice",icon:"🏹",desc:"Dispara 3 flechas em leque (Dano 1.5x3)",color:"#43d9ff",dmg:1.5},
+fire:{id:"fire",name:"Orbe de Chamas",icon:"🔥",desc:"Explosão em área no impacto (Dano 3)",color:"#ff9f43",dmg:3},
+laser:{id:"laser",name:"Canhão Arcano",icon:"⚡",desc:"Raio que perfura inimigos (Dano 2.5)",color:"#c58aff",dmg:2.5},
+frost:{id:"frost",name:"Lança Glacial",icon:"❄️",desc:"Perfura e congela inimigos (Dano 2.2)",color:"#90e0ef",dmg:2.2},
+volt:{id:"volt",name:"Arco Voltaico",icon:"🌩️",desc:"Disparo elétrico triplo veloz (Dano 2)",color:"#ffd166",dmg:2},
+scythe:{id:"scythe",name:"Foice Sanguinária",icon:"🩸",desc:"Lâmina larga que atravessa alvos (Dano 2.8)",color:"#ff4d6d",dmg:2.8},
+plasma:{id:"plasma",name:"Supernova de Plasma",icon:"🌟",desc:"Disparo duplo celestial (Dano 3.5)",color:"#ffd166",dmg:3.5}
+};
+this.weaponList=["dart","spread","fire","laser","frost","volt","scythe"];
+
+this.shopCatalog=[
+{id:"potion",icon:"🧪",name:"Elixir de Sangue",desc:"Recupera +2 corações de vida imediatamente.",cost:15,buy:g=>{g.hp=Math.min(g.maxHp,g.hp+2)}},
+{id:"maxhp",icon:"❤️‍🔥",name:"Coração de Titã",desc:"Aumenta a Vida Máxima em +1 e cura +1.",cost:30,buy:g=>{g.maxHp++;g.hp=Math.min(g.maxHp,g.hp+1)}},
+{id:"shield",icon:"🛡️",name:"Bastião de Éter",desc:"Adiciona +2 Escudos Arcanos de proteção.",cost:20,buy:g=>{g.shields+=2}},
+{id:"dmg",icon:"⚔️",name:"Runa da Ruína",desc:"Aumenta o dano de todas as armas em +1.",cost:35,buy:g=>{g.bonusDmg=(g.bonusDmg||0)+1}},
+{id:"pulse",icon:"💥",name:"Bateria Sônica",desc:"Recarrega +2 cargas de Pulso Sônico (X).",cost:18,buy:g=>{g.pulses=Math.min(8,g.pulses+2)}},
+{id:"plasma",icon:"🌟",name:"Arma: Supernova",desc:"Desbloqueia e equipa a Supernova de Plasma!",cost:45,once:true,buy:g=>{if(!this.weaponList.includes("plasma"))this.weaponList.push("plasma");g.weaponIdx=this.weaponList.indexOf("plasma");g.hasPlasma=true}}
+];
+
+this.relics={
+haste:{icon:"⚡",name:"Escamas velozes",desc:"Movimento 10% mais ágil.",apply:g=>g.haste=Math.min(4,g.haste+1)},
+shield:{icon:"🛡️",name:"Escudo arcano",desc:"Ganha +2 escudos que bloqueiam qualquer dano.",apply:g=>g.shields+=2},
+magnet:{icon:"🧲",name:"Ímã de éter",desc:"Atrai cristais, moedas e frutas de longe.",apply:g=>g.magnet=Math.min(6,g.magnet+2)},
+heart:{icon:"💚",name:"Coração antigo",desc:"Recupera +2 pontos de vida e +10 ouro.",apply:g=>{g.hp=Math.min(g.maxHp,g.hp+2);g.gold+=10}},
+pulse:{icon:"💥",name:"Núcleo explosivo",desc:"Ganha +2 cargas de pulso sônico.",apply:g=>g.pulses=Math.min(8,g.pulses+2)},
+growth:{icon:"🐍",name:"Corpo ancestral",desc:"Cresce 1 segmento e ganha +30 pontos.",apply:g=>{g.snake.push({...g.snake.at(-1)});g.prevSnake.push({...g.snake.at(-1)});g.score+=30}},
+gunpower:{icon:"⚔️",name:"Arsenal Arcano",desc:"Aumenta o dano de todas as armas em +1.",apply:g=>{g.bonusDmg=(g.bonusDmg||0)+1}},
+vamp:{icon:"🩸",name:"Presas Vampíricas",desc:"Recupera +1 vida ao limpar cada sala.",apply:g=>{g.vamp=true;g.hp=Math.min(g.maxHp,g.hp+1)}}
+};
+
+this.bgCache={};
+this.buildBackgroundCache();
+this.particles=[];
+this.rings=[];
+this.popups=[];
+this.shake=0;
+
+this.reset();this.bind();
+this.renderOverlayHeroGrid();
+this.$("autoBtn").classList.add("active");
+this.$("autoBtn").textContent="⚡ Auto-Tiro: LIGADO";
+this.ui();this.draw();
+requestAnimationFrame(t=>this.frame(t));
+}
+
+buildBackgroundCache(){
+const themes={
+combat:{bg:"#071324",border:"#295173",torch:"#43d9ff"},
+boss:{bg:"#170b1e",border:"#b53874",torch:"#ff416d"},
+treasure:{bg:"#171326",border:"#b08928",torch:"#ffd166"},
+rest:{bg:"#091b22",border:"#288571",torch:"#55f5a5"}
+};
+const N=this.N,C=this.C;
+for(const [k,th] of Object.entries(themes)){
+const off=document.createElement("canvas");
+off.width=600;off.height=600;
+const c=off.getContext("2d",{alpha:false});
+c.fillStyle=th.bg;c.fillRect(0,0,600,600);
+for(let y=0;y<N;y++)for(let x=0;x<N;x++){
+c.fillStyle=(x+y)%2?"#ffffff05":"#ffffff09";
+c.fillRect(x*C,y*C,C,C);
+if((x*7+y*13)%29===0){
+c.fillStyle="#ffffff07";
+c.fillRect(x*C+4,y*C+4,C-8,C-8);
+}
+}
+c.strokeStyle="#233852";c.lineWidth=1;
+c.beginPath();
+for(let i=0;i<=N;i++){
+c.moveTo(i*C,0);c.lineTo(i*C,600);
+c.moveTo(0,i*C);c.lineTo(600,i*C);
+}
+c.stroke();
+const corners=[[24,24],[576,24],[24,576],[576,576]];
+for(const [cx,cy] of corners){
+const grad=c.createRadialGradient(cx,cy,2,cx,cy,65);
+grad.addColorStop(0,th.torch+"35");
+grad.addColorStop(1,"transparent");
+c.fillStyle=grad;c.beginPath();c.arc(cx,cy,65,0,Math.PI*2);c.fill();
+}
+c.save();
+c.strokeStyle=th.border;c.lineWidth=4;c.setLineDash([10,6]);
+c.strokeRect(2,2,596,596);
+c.restore();
+this.bgCache[k]=off;
+}
+}
+
 loadBest(){try{return Number(localStorage.getItem("snakeRogueBestV2"))||0}catch{return 0}}
 saveBest(){try{localStorage.setItem("snakeRogueBestV2",String(this.best))}catch{}}
-same(a,b){return a.x===b.x&&a.y===b.y}dist(a,b){return Math.abs(a.x-b.x)+Math.abs(a.y-b.y)}
-reset(){clearTimeout(this.timer);this.g={snake:[{x:11,y:12},{x:10,y:12},{x:9,y:12}],dir:{x:1,y:0},next:{x:1,y:0},score:0,hp:3,maxHp:3,shields:0,pulses:2,level:1,xp:0,need:5,room:1,type:"combat",food:null,orbs:[],enemies:[],boss:null,door:false,relics:[],haste:0,magnet:0,step:0,invuln:0};this.spawnRoom()}
-free(){for(let i=0;i<1000;i++){let p={x:1+Math.floor(Math.random()*23),y:1+Math.floor(Math.random()*23)};if(!this.g.snake.some(s=>this.same(s,p))&&!this.g.enemies.some(s=>this.same(s,p))&&!(this.g.boss&&this.same(this.g.boss,p))&&!(this.g.food&&this.same(this.g.food,p)))return p}return{x:3,y:3}}
-spawnRoom(){
-let g=this.g;g.enemies=[];g.orbs=[];g.boss=null;g.door=false;g.food=null;
-if(g.room%3===0){g.type="boss";g.roomName="Santuário do Guardião";g.roomDesc="Uma criatura ancestral protege a saída.";g.boss={x:19,y:12,hp:4+Math.floor(g.room/3)*2,max:4+Math.floor(g.room/3)*2,phase:0,attack:null};for(let i=0;i<7;i++)g.orbs.push(this.free());this.log("CHEFE: o Guardião despertou!")}
-else if(g.room%4===0){g.type="rest";g.roomName="Jardim de descanso";g.roomDesc="Um refúgio restaura sua energia.";g.hp=Math.min(g.maxHp,g.hp+1);g.shields++;g.door=true;this.log("Refúgio: +1 vida e +1 escudo.")}
-else if(g.room%2===0){g.type="treasure";g.roomName="Câmara do tesouro";g.roomDesc="Cristais raros brilham entre as ruínas.";for(let i=0;i<10;i++)g.orbs.push(this.free());g.score+=15;this.log("Tesouro encontrado: +15 pontos.")}
-else{g.type="combat";g.roomName="Galeria dos ecos";g.roomDesc="Derrote todas as criaturas para abrir a porta.";let count=Math.min(2+Math.floor(g.room/2),7);for(let i=0;i<count;i++){let p=this.free();g.enemies.push({...p,phase:0})}}
-g.food=this.free();this.ui()
+same(a,b){return a.x===b.x&&a.y===b.y}
+dist(a,b){return Math.abs(a.x-b.x)+Math.abs(a.y-b.y)}
+
+reset(){
+clearTimeout(this.timer);
+this.particles=[];this.rings=[];this.popups=[];this.shake=0;
+this.weaponList=["dart","spread","fire","laser","frost","volt","scythe"];
+const h=this.heroes[this.heroKey]||this.heroes.viper;
+if(h.startWeapon==="plasma"&&!this.weaponList.includes("plasma")){
+this.weaponList.push("plasma");
 }
+const wIdx=Math.max(0,this.weaponList.indexOf(h.startWeapon));
+const initSnake=[{x:8,y:12},{x:7,y:12},{x:6,y:12}];
+this.g={
+hero:h.id,
+snake:initSnake.map(p=>({...p})),
+prevSnake:initSnake.map(p=>({...p})),
+dir:{x:1,y:0},next:{x:1,y:0},
+score:0,gold:25,hp:h.hp,maxHp:h.hp,shields:h.shields,pulses:h.pulses,
+level:1,xp:0,need:4,room:1,type:"combat",
+food:null,orbs:[],coins:[],enemies:[],boss:null,door:false,relics:[],
+haste:h.haste,magnet:h.magnet,step:0,invuln:0,
+weaponIdx:wIdx,bonusDmg:h.bonusDmg,goldMult:h.goldMult,
+vamp:Boolean(h.vamp),shieldRegen:Boolean(h.shieldRegen),hasPlasma:h.startWeapon==="plasma",
+playerBullets:[],enemyBullets:[]
+};
+this.tickStart=performance.now();
+this.spawnRoom();
+}
+
+renderOverlayHeroGrid(){
+const container=this.$("overlayHeroGrid");
+if(!container)return;
+container.innerHTML="";
+Object.values(this.heroes).forEach(h=>{
+const btn=document.createElement("button");
+btn.className="roster-card"+(this.heroKey===h.id?" selected":"");
+btn.innerHTML=`<div class="roster-ico">${h.icon}</div><div><b>${h.name}</b><small>${h.tag}</small><em>${h.bio}</em></div>`;
+btn.onclick=()=>{
+this.selectHero(h.id);
+this.renderOverlayHeroGrid();
+};
+container.appendChild(btn);
+});
+}
+
+openHeroModal(){
+if(this.state==="running")this.pause();
+const d=this.$("dialog");
+d.innerHTML=`<div class="emoji">🦸</div><h2>Galeria de Heróis (8 Personagens)</h2><p>Escolha seu personagem! Se estiver no meio de uma aventura, seu visual, arma favorita e passiva se adaptam imediatamente:</p><div class="hero-roster" id="overlayHeroGrid"></div><button class="btn primary" id="mainBtn" style="width:100%;margin-top:6px">▶ Confirmar e Jogar</button><button class="btn secondary" id="helpBtn" style="width:100%;margin-top:6px">Como jogar</button>`;
+this.renderOverlayHeroGrid();
+d.querySelector("#mainBtn").onclick=()=>{if(this.state==="paused"||this.state==="shop")this.resume();else this.start()};
+d.querySelector("#helpBtn").onclick=()=>this.overlay("🎮","Como Jogar, Heróis & Loja","<b>8 Heróis:</b> Escolha entre Víbora, Dragão, Mecha, Espectro, Glacial, Voltaica, Hidra ou Leviatã!<br><b>Paredes-Portal:</b> Atravesse qualquer borda da sala sem levar dano.<br><b>Loja do Mercador (Tecla B):</b> Gaste ouro (🪙) em poções, vida máxima, escudos e armas!");
+this.$("overlay").classList.remove("off");
+}
+
+selectHero(key){
+if(!this.heroes[key])return;
+this.heroKey=key;
+const h=this.heroes[key];
+this.sfx.weaponSwitch();
+document.querySelectorAll("[data-hero]").forEach(b=>b.classList.toggle("selected",b.dataset.hero===key));
+this.$("heroPass").textContent=h.tag;
+if(this.state==="ready"||this.state==="over"){
+this.reset();this.ui();this.draw();
+}else{
+this.g.hero=h.id;
+this.g.vamp=this.g.vamp||Boolean(h.vamp);
+this.g.shieldRegen=Boolean(h.shieldRegen);
+if(h.startWeapon==="plasma"&&!this.weaponList.includes("plasma"))this.weaponList.push("plasma");
+const idx=this.weaponList.indexOf(h.startWeapon);
+if(idx>=0)this.g.weaponIdx=idx;
+this.toast("Herói ativo: "+h.name);
+this.ui();this.draw();
+}
+}
+
+free(minDistFromSnake=4){
+const g=this.g,head=g.snake[0];
+for(let i=0;i<600;i++){
+const p={x:1+Math.floor(Math.random()*23),y:1+Math.floor(Math.random()*23)};
+if(this.dist(p,head)<minDistFromSnake)continue;
+if(!g.snake.some(s=>this.same(s,p))&&!g.enemies.some(s=>this.same(s,p))&&!(g.boss&&this.same(g.boss,p))&&!(g.food&&this.same(g.food,p)))return p;
+}
+return{x:18,y:18};
+}
+
+spawnRoom(){
+const g=this.g;
+g.enemies=[];g.orbs=[];g.coins=[];g.boss=null;g.door=false;g.food=null;g.playerBullets=[];g.enemyBullets=[];
+if(g.room%3===0){
+g.type="boss";
+const bossVariants=[
+{title:"☠ GUARDIÃO ANCESTRAL",name:"Santuário do Guardião",color:"#b55fe6",rageColor:"#ff2a6d",kind:"guardian"},
+{title:"🐉 REI LICH CARMESIM",name:"Trono do Rei Lich",color:"#ff4d6d",rageColor:"#ff9f43",kind:"lich"},
+{title:"👁️ IMPERADOR DO VAZIO",name:"Núcleo Dimensional",color:"#48cae4",rageColor:"#c77dff",kind:"void"}
+];
+const bv=bossVariants[Math.floor(g.room/3-1)%bossVariants.length];
+g.roomName=bv.name;
+g.roomDesc="Derrote o Chefe da Masmorra! Use a Loja (B) se precisar de cura.";
+const bhp=5+Math.floor(g.room/3)*2;
+g.boss={x:19,y:12,px:19,py:12,hp:bhp,max:bhp,phase:0,attack:null,rage:false,flash:0,title:bv.title,color:bv.color,rageColor:bv.rageColor,kind:bv.kind};
+const bt=this.$("bossTitle");if(bt)bt.textContent=bv.title;
+for(let i=0;i<7;i++)g.orbs.push(this.free(2));
+for(let i=0;i<3;i++)g.coins.push({...this.free(2),val:5});
+this.log("CHEFE: "+bv.title+" despertou!");
+}else if(g.room%4===0){
+g.type="rest";g.roomName="Jardim do Mercador";g.roomDesc="Refúgio seguro! +2 vidas, +2 escudos, +15 ouro e Loja aberta.";
+g.hp=Math.min(g.maxHp,g.hp+2);g.shields+=2;g.gold+=15;g.door=true;g.pulses=Math.min(8,g.pulses+1);
+this.log("Refúgio: +2 vidas, +2 escudos e +15 de ouro.");
+}else if(g.room%2===0){
+g.type="treasure";g.roomName="Câmara do Tesouro Dourado";g.roomDesc="Colete as moedas de ouro e cristais para ficar mais forte!";
+for(let i=0;i<8;i++)g.orbs.push(this.free(2));
+for(let i=0;i<6;i++)g.coins.push({...this.free(2),val:6});
+g.score+=20;
+this.log("Câmara de Tesouro: muitas moedas e cristais!");
+}else{
+g.type="combat";g.roomName="Galeria das Sombras";g.roomDesc="Elimine os inimigos para destrancar o portal dourado.";
+const count=Math.min(2+Math.floor((g.room-1)/2),5);
+const types=["crawler","archer","mage","golem","necro","assassin","valkyrie","bomber"];
+for(let i=0;i<count;i++){
+const p=this.free(6);
+let t=types[(i+g.room)%types.length];
+if(g.room===1)t=i===0?"crawler":"archer";
+g.enemies.push(this.createEnemy(t,p.x,p.y));
+}
+}
+g.food=this.free(2);
+this.ui();
+}
+
+createEnemy(type,x,y){
+const baseHp=type==="golem"?2.5:type==="valkyrie"?2:type==="necro"?2:1.2;
+return{
+type:type,x:x,y:y,px:x,py:y,hp:baseHp,maxHp:baseHp,phase:Math.floor(Math.random()*3),
+telegraph:0,aimDx:0,aimDy:0,flash:0,chill:0
+};
+}
+
 bind(){
-this.$("mainBtn").onclick=()=>{if(this.state==="ready"||this.state==="over")this.start();else if(this.state==="paused")this.resume()};
-this.$("newBtn").onclick=()=>this.start();this.$("pauseBtn").onclick=()=>this.togglePause();
-this.$("helpBtn").onclick=()=>this.overlay("🎮","Como explorar","Setas/WASD movem. Colete comida e cristais azuis. X dispara um pulso que atinge alvos próximos. Limpe a sala e entre pela porta dourada. A cada terceira sala, enfrente o Guardião.");
-document.addEventListener("keydown",e=>{let k=e.key.toLowerCase(),m={arrowup:"up",w:"up",arrowdown:"down",s:"down",arrowleft:"left",a:"left",arrowright:"right",d:"right"};if(m[k]){e.preventDefault();this.turn(m[k])}else if(e.code==="Space"){e.preventDefault();this.togglePause()}else if(k==="x")this.pulse();else if(["1","2","3"].includes(k)&&this.state==="upgrade")this.pick(+k-1)});
+const unlockAudio=()=>this.sfx.init();
+document.addEventListener("pointerdown",unlockAudio,{once:true});
+document.addEventListener("keydown",unlockAudio,{once:true});
+
+this.$("mainBtn").onclick=()=>{if(this.state==="ready"||this.state==="over")this.start();else if(this.state==="paused"||this.state==="shop")this.resume()};
+this.$("newBtn").onclick=()=>this.start();
+this.$("pauseBtn").onclick=()=>this.togglePause();
+this.$("helpBtn").onclick=()=>this.overlay("🎮","Como Jogar, Heróis & Loja","<b>8 Heróis:</b> Escolha entre Víbora, Dragão, Mecha, Espectro, Glacial, Voltaica, Hidra ou Leviatã!<br><b>Paredes-Portal:</b> Atravesse qualquer borda da sala sem levar dano!<br><b>Loja do Mercador (Tecla B):</b> Gaste o ouro (🪙) obtido dos inimigos em poções, escudos, dano e armas!<br><b>Combate:</b> Espaço/Z atira, Q/E troca de arma, H abre a Galeria de Heróis, X solta o Pulso Sônico.");
+
+this.$("shootBtn").onclick=()=>this.shoot();
+this.$("switchBtn").onclick=()=>this.cycleWeapon();
+this.$("heroesBtn").onclick=()=>this.openHeroModal();
+this.$("shopBtn").onclick=()=>this.toggleShop();
+this.$("autoBtn").onclick=()=>this.toggleAuto();
+this.$("soundBtn").onclick=()=>this.toggleSound();
+this.$("mobShootBtn").onclick=()=>this.shoot();
+this.$("mobPulseBtn").onclick=()=>this.pulse();
+this.$("mobShopBtn").onclick=()=>this.toggleShop();
+
+document.querySelectorAll("[data-hero]").forEach(btn=>{
+btn.onclick=()=>this.selectHero(btn.dataset.hero);
+});
+
+document.addEventListener("keydown",e=>{
+const k=e.key.toLowerCase(),m={arrowup:"up",w:"up",arrowdown:"down",s:"down",arrowleft:"left",a:"left",arrowright:"right",d:"right"};
+if(m[k]){e.preventDefault();this.turn(m[k])}
+else if(e.code==="Space"||k==="z"){e.preventDefault();this.shoot()}
+else if(k==="q"||k==="e"||k==="v"){e.preventDefault();this.cycleWeapon()}
+else if(k==="h"){e.preventDefault();this.openHeroModal()}
+else if(k==="b"){e.preventDefault();this.toggleShop()}
+else if(k==="c"){e.preventDefault();this.toggleAuto()}
+else if(k==="x"){e.preventDefault();this.pulse()}
+else if(k==="p"||e.code==="Escape"){e.preventDefault();if(this.state==="shop")this.resume();else this.togglePause()}
+else if(["1","2","3"].includes(k)&&this.state==="upgrade"){e.preventDefault();this.pick(+k-1)}
+});
+
 document.querySelectorAll("[data-dir]").forEach(b=>b.onpointerdown=e=>{e.preventDefault();this.turn(b.dataset.dir)});
-this.canvas.onpointerdown=e=>this.touch={x:e.clientX,y:e.clientY};this.canvas.onpointerup=e=>{if(!this.touch)return;let dx=e.clientX-this.touch.x,dy=e.clientY-this.touch.y;this.touch=null;if(Math.max(Math.abs(dx),Math.abs(dy))>18)this.turn(Math.abs(dx)>Math.abs(dy)?(dx>0?"right":"left"):(dy>0?"down":"up"))};
+
+this.canvas.onpointerdown=e=>this.touch={x:e.clientX,y:e.clientY};
+this.canvas.onpointerup=e=>{
+if(!this.touch)return;const dx=e.clientX-this.touch.x,dy=e.clientY-this.touch.y;this.touch=null;
+if(Math.max(Math.abs(dx),Math.abs(dy))>18)this.turn(Math.abs(dx)>Math.abs(dy)?(dx>0?"right":"left"):(dy>0?"down":"up"));
+};
 document.addEventListener("visibilitychange",()=>{if(document.hidden&&this.state==="running")this.pause()});
 }
-start(){this.reset();this.state="running";this.$("pauseBtn").disabled=false;this.$("pauseBtn").textContent="Ⅱ Pausar";this.hide();this.log("A aventura começou.");this.ui();this.draw();this.schedule()}
-turn(name){if(this.state==="ready")this.start();if(this.state!=="running")return;let d=this.dirs[name],c=this.g.next;if(d.x===-c.x&&d.y===-c.y)return;this.g.next={...d}}
-schedule(){clearTimeout(this.timer);if(this.state!=="running")return;let ms=Math.max(75,155-this.g.haste*14-Math.floor(this.g.room/2)*2);this.timer=setTimeout(()=>{this.tick();if(this.state==="running")this.schedule()},ms)}
-togglePause(){if(this.state==="running")this.pause();else if(this.state==="paused")this.resume()}
-pause(){if(this.state!=="running")return;this.state="paused";clearTimeout(this.timer);this.overlay("Ⅱ","Aventura pausada","A dungeon aguarda. Continue quando estiver pronto.");this.$("pauseBtn").textContent="▶ Continuar"}
-resume(){if(this.state!=="paused")return;this.state="running";this.hide();this.$("pauseBtn").textContent="Ⅱ Pausar";this.schedule()}
-tick(){
-let g=this.g;g.step++;g.dir={...g.next};let h=g.snake[0],n={x:h.x+g.dir.x,y:h.y+g.dir.y},ate=this.same(n,g.food),body=ate?g.snake:g.snake.slice(0,-1);
-let wall=n.x<0||n.y<0||n.x>=this.N||n.y>=this.N,self=body.some(p=>this.same(p,n)),ei=g.enemies.findIndex(e=>this.same(e,n)),bi=g.boss&&this.same(g.boss,n);
-if(wall||self||ei>=0||bi){if(g.shields){g.shields--;this.toast("Escudo absorveu o impacto");if(ei>=0)g.enemies.splice(ei,1);if(wall){n.x=(n.x+this.N)%this.N;n.y=(n.y+this.N)%this.N}if(self){this.hurt();return}}else{this.hurt();return}}
-g.snake.unshift(n);if(ate){g.score+=10;this.xp(1);g.food=this.free();this.toast("+10 • fruta")}else g.snake.pop();
-for(let i=g.orbs.length-1;i>=0;i--)if(this.dist(g.snake[0],g.orbs[i])<=1+g.magnet){g.orbs.splice(i,1);g.score+=3;this.xp(1);this.toast("+3 • cristal XP")}
-this.moveEnemies();if(g.boss)this.moveBoss();
-if(g.enemies.some(e=>this.same(e,g.snake[0]))||g.boss&&this.same(g.boss,g.snake[0])){this.hurt();return}
-if(g.invuln>0)g.invuln--;
-if(!g.enemies.length&&!g.boss&&g.type==="combat"&&!g.door){g.door=true;this.log("Sala limpa! A porta abriu.");this.toast("PORTA ABERTA")}
-if(g.type==="treasure"&&!g.orbs.length)g.door=true;
-if(g.door&&n.x===24&&n.y===12){this.nextRoom();return}
-this.ui();this.draw()
+
+toggleSound(){
+this.sfx.enabled=!this.sfx.enabled;
+const btn=this.$("soundBtn");
+btn.classList.toggle("active",this.sfx.enabled);
+btn.textContent=this.sfx.enabled?"🔊 Som: LIGADO":"🔇 Som: MUDO";
+if(this.sfx.enabled)this.sfx.pickup();
+this.toast(this.sfx.enabled?"Efeitos sonoros ativados":"Efeitos sonoros desativados");
 }
-moveEnemies(){let g=this.g;for(let e of g.enemies){e.phase++;if(e.phase%2)continue;let t=g.snake[0],dx=Math.sign(t.x-e.x),dy=Math.sign(t.y-e.y),opts=Math.random()<.5?[{x:e.x+dx,y:e.y},{x:e.x,y:e.y+dy}]:[{x:e.x,y:e.y+dy},{x:e.x+dx,y:e.y}];opts=opts.filter(p=>p.x>0&&p.y>0&&p.x<24&&p.y<24&&!g.snake.some(s=>this.same(s,p))&&!g.enemies.some(o=>o!==e&&this.same(o,p)));if(opts.length)Object.assign(e,opts[0])}}
-moveBoss(){let b=this.g.boss,g=this.g;b.phase++;if(b.phase%3!==0)return;let t=g.snake[0];if(b.phase%6===0){b.attack={axis:Math.random()<.5?"x":"y",value:Math.random()<.5?t.x:t.y,ttl:1};this.toast("O Guardião prepara uma onda!")}else{let dx=Math.sign(t.x-b.x),dy=Math.sign(t.y-b.y),opts=[{x:b.x+dx,y:b.y},{x:b.x,y:b.y+dy}].filter(p=>p.x>1&&p.y>1&&p.x<24&&p.y<24&&!g.snake.some(s=>this.same(s,p)));if(opts.length)Object.assign(b,opts[0])}if(b.attack&&b.attack.ttl){let hit=b.attack.axis==="x"?t.x===b.attack.value:t.y===b.attack.value;if(hit){b.attack.ttl=0;this.hurt()}}}
-pulse(){let g=this.g;if(this.state!=="running"||g.pulses<=0)return;g.pulses--;let h=g.snake[0],hits=0;for(let i=g.enemies.length-1;i>=0;i--)if(this.dist(h,g.enemies[i])<=7){g.enemies.splice(i,1);hits++}if(g.boss&&this.dist(h,g.boss)<=8){this.damageBoss(4);hits++}this.log(hits?`Pulso atingiu ${hits} alvo(s).`:"Pulso sem alvos no alcance.");this.toast("PULSO • "+g.pulses+" carga(s)");this.ui();this.draw()}
-damageBoss(n){let b=this.g.boss;if(!b)return;b.hp-=n;b.flash=2;this.toast("GUARDIÃO −"+n+" HP");if(b.hp<=0){this.g.boss=null;this.g.score+=100;this.g.shields++;this.g.door=true;this.xp(3);this.log("Guardião derrotado! +100 pontos e escudo.")}this.ui()}
-hurt(){let g=this.g;if(g.shields)g.shields--;else g.hp--;if(g.hp<=0){this.end();return}g.invuln=4;let p={x:Math.max(2,Math.min(22,g.snake[0].x)),y:Math.max(2,Math.min(22,g.snake[0].y))};g.snake=[p,{x:p.x-1,y:p.y},{x:p.x-2,y:p.y}];g.dir={x:1,y:0};g.next={x:1,y:0};this.toast("Você sofreu dano!");this.ui();this.draw()}
-xp(n){let g=this.g;g.xp+=n;if(g.xp>=g.need){g.xp-=g.need;g.level++;g.need=5+g.level*2;this.levelUp()}}
-levelUp(){this.state="upgrade";clearTimeout(this.timer);let keys=Object.keys(this.relics).sort(()=>Math.random()-.5).slice(0,3),d=this.$("dialog");d.innerHTML='<div class="emoji">✨</div><h2>Nível '+this.g.level+'!</h2><p>Escolha uma relíquia para fortalecer sua serpente.</p><div class="choices" id="choices"></div>';keys.forEach((k,i)=>{let r=this.relics[k],b=document.createElement("button");b.className="choice";b.innerHTML=`<span>${r.icon}</span><b>${i+1}. ${r.name}</b><small>${r.desc}</small>`;b.onclick=()=>this.pick(k);d.querySelector("#choices").appendChild(b)});this.$("overlay").classList.remove("off");this.$("pauseBtn").disabled=true}
-pick(key){let k=typeof key==="number"?Object.keys(this.relics).find((_,i)=>i===key):key;/* The displayed cards retain their key in their click handler. */if(!k)return;this.relics[k].apply(this.g);this.g.relics.push(k);this.state="running";this.$("pauseBtn").disabled=false;this.log("Relíquia: "+this.relics[k].name);this.hide();this.ui();this.schedule()}
-nextRoom(){let g=this.g;g.room++;g.pulses=Math.min(4,g.pulses+1);g.snake=[{x:3,y:12},{x:2,y:12},{x:1,y:12}];g.dir={x:1,y:0};g.next={x:1,y:0};g.invuln=3;this.spawnRoom();this.log("Você entrou na sala "+g.room+".");this.ui();this.draw();this.toast("SALA "+g.room)}
-end(){this.state="over";clearTimeout(this.timer);if(this.g.score>this.best){this.best=this.g.score;this.saveBest()}this.$("pauseBtn").disabled=true;this.overlay("🏆","Fim da aventura",`Pontuação: ${this.g.score} • Sala alcançada: ${this.g.room}. Recorde: ${this.best}.`);this.$("mainBtn").textContent="↻ Tentar novamente";this.ui()}
-overlay(icon,title,text){let d=this.$("dialog");d.innerHTML=`<div class="emoji">${icon}</div><h2>${title}</h2><p>${text}</p><button class="btn primary" id="mainBtn" style="width:100%">▶ Continuar</button><button class="btn secondary" id="helpBtn" style="width:100%;margin-top:7px">Como jogar</button>`;d.querySelector("#mainBtn").onclick=()=>{if(this.state==="paused")this.resume();else this.start()};d.querySelector("#helpBtn").onclick=()=>this.overlay("🎮","Como explorar","Setas/WASD movem. X dispara um pulso. Colete comida e cristais. Limpe a sala e entre pela porta dourada. A cada terceira sala, enfrente o Guardião.");this.$("overlay").classList.remove("off")}
+
+toggleAuto(){
+this.autoFire=!this.autoFire;
+const btn=this.$("autoBtn");
+btn.classList.toggle("active",this.autoFire);
+btn.textContent=this.autoFire?"⚡ Auto-Tiro: LIGADO":"⚡ Auto-Tiro: DESLIGADO";
+this.sfx.weaponSwitch();
+this.toast(this.autoFire?"Auto-Tiro Ativado!":"Auto-Tiro Desativado");
+}
+
+cycleWeapon(){
+this.g.weaponIdx=(this.g.weaponIdx+1)%this.weaponList.length;
+const w=this.weapons[this.weaponList[this.g.weaponIdx]];
+this.toast("Arma: "+w.name);
+this.sfx.weaponSwitch();
+this.ui();
+}
+
+toggleShop(){
+if(this.state==="shop"){this.resume();return}
+if(this.state!=="running"&&this.state!=="paused")return;
+this.state="shop";
+clearTimeout(this.timer);
+this.sfx.coin();
+this.renderShop();
+this.$("overlay").classList.remove("off");
+}
+
+renderShop(){
+const g=this.g,d=this.$("dialog");
+d.innerHTML=`<div class="emoji">🏪</div><h2>Mercador da Masmorra</h2><p>Saldo disponível: <b style="color:var(--gold)">🪙 ${g.gold} Ouro</b> • Fortaleça seu herói instantaneamente!</p><div class="shop-grid" id="shopGrid"></div><button class="btn primary" id="mainBtn" style="width:100%;margin-top:6px">▶ Voltar para a Aventura</button>`;
+const grid=d.querySelector("#shopGrid");
+this.shopCatalog.forEach(item=>{
+const owned=item.once&&g.hasPlasma;
+const canAfford=g.gold>=item.cost&&!owned;
+const btn=document.createElement("button");
+btn.className="shop-item";
+btn.disabled=!canAfford;
+btn.innerHTML=`<div class="s-ico">${item.icon}</div><div><b>${item.name}</b><small>${item.desc}</small></div><span class="shop-price">${owned?"COMPRADO":"🪙 "+item.cost}</span>`;
+btn.onclick=()=>this.buyShopItem(item);
+grid.appendChild(btn);
+});
+d.querySelector("#mainBtn").onclick=()=>this.resume();
+}
+
+buyShopItem(item){
+const g=this.g;
+if(g.gold<item.cost||(item.once&&g.hasPlasma))return;
+g.gold-=item.cost;
+item.buy(g);
+this.sfx.buy();
+this.log("Comprou na Loja: "+item.name);
+this.toast("Comprado: "+item.name+"!");
+this.ui();
+this.renderShop();
+}
+
+start(){
+this.reset();this.state="running";
+this.$("pauseBtn").disabled=false;this.$("pauseBtn").textContent="Ⅱ Pausar";
+this.hide();this.sfx.doorOpen();
+const h=this.heroes[this.g.hero];
+this.log(`Herói ${h.name} entrou na masmorra!`);
+this.ui();this.draw();this.schedule();
+}
+
+turn(name){
+if(this.state==="ready")this.start();
+if(this.state!=="running")return;
+const d=this.dirs[name],c=this.g.dir;
+if(d.x===-c.x&&d.y===-c.y)return;
+this.g.next={...d};
+}
+
+schedule(){
+clearTimeout(this.timer);if(this.state!=="running")return;
+this.tickDur=Math.max(92,162-this.g.haste*12-Math.floor(this.g.room/3)*2);
+this.tickStart=performance.now();
+this.timer=setTimeout(()=>{this.tick();if(this.state==="running")this.schedule()},this.tickDur);
+}
+
+togglePause(){if(this.state==="running")this.pause();else if(this.state==="paused"||this.state==="shop")this.resume()}
+pause(){if(this.state!=="running")return;this.state="paused";clearTimeout(this.timer);this.overlay("Ⅱ","Aventura Pausada","Troque de herói, visite a Loja ou continue explorando.");this.$("pauseBtn").textContent="▶ Continuar"}
+resume(){if(this.state!=="paused"&&this.state!=="shop")return;this.state="running";this.hide();this.$("pauseBtn").textContent="Ⅱ Pausar";this.schedule()}
+
+shoot(){
+const g=this.g;
+if(this.state!=="running"||g.snake.length===0)return;
+const wKey=this.weaponList[g.weaponIdx]||"dart";
+const w=this.weapons[wKey]||this.weapons.dart;
+const head=g.snake[0];
+const dmg=w.dmg+(g.bonusDmg||0);
+
+let aimX=g.dir.x,aimY=g.dir.y;
+let bestTarget=null,bestDist=999;
+for(const e of g.enemies){
+const d=Math.hypot(e.x-head.x,e.y-head.y);
+if(d<bestDist){bestDist=d;bestTarget=e;}
+}
+if(g.boss){
+const d=Math.hypot(g.boss.x-head.x,g.boss.y-head.y);
+if(d<bestDist){bestDist=d;bestTarget=g.boss;}
+}
+if(bestTarget&&bestDist<=15){
+const dx=bestTarget.x-head.x,dy=bestTarget.y-head.y;
+const len=Math.hypot(dx,dy)||1;
+aimX=dx/len;aimY=dy/len;
+}
+
+this.sfx.shoot(wKey);
+this.addMuzzleSpark(head,w.color);
+
+if(wKey==="dart"){
+g.playerBullets.push({x:head.x+0.5,y:head.y+0.5,vx:aimX*1.15,vy:aimY*1.15,type:"dart",dmg:dmg,color:w.color,life:26,pierce:0});
+}else if(wKey==="spread"){
+const baseAngle=Math.atan2(aimY,aimX);
+[-0.24,0,0.24].forEach(a=>{
+const ang=baseAngle+a;
+g.playerBullets.push({x:head.x+0.5,y:head.y+0.5,vx:Math.cos(ang)*1.0,vy:Math.sin(ang)*1.0,type:"spread",dmg:dmg,color:w.color,life:24,pierce:0});
+});
+}else if(wKey==="fire"){
+g.playerBullets.push({x:head.x+0.5,y:head.y+0.5,vx:aimX*0.85,vy:aimY*0.85,type:"fire",dmg:dmg,color:w.color,life:28,pierce:0});
+}else if(wKey==="laser"){
+g.playerBullets.push({x:head.x+0.5,y:head.y+0.5,vx:aimX*1.35,vy:aimY*1.35,type:"laser",dmg:dmg,color:w.color,life:25,pierce:3});
+}else if(wKey==="frost"){
+g.playerBullets.push({x:head.x+0.5,y:head.y+0.5,vx:aimX*1.1,vy:aimY*1.1,type:"frost",dmg:dmg,color:w.color,life:26,pierce:2,chill:true});
+}else if(wKey==="volt"){
+const baseAngle=Math.atan2(aimY,aimX);
+[-0.14,0,0.14].forEach(a=>{
+const ang=baseAngle+a;
+g.playerBullets.push({x:head.x+0.5,y:head.y+0.5,vx:Math.cos(ang)*1.3,vy:Math.sin(ang)*1.3,type:"volt",dmg:dmg,color:w.color,life:22,pierce:1});
+});
+}else if(wKey==="scythe"){
+g.playerBullets.push({x:head.x+0.5,y:head.y+0.5,vx:aimX*0.95,vy:aimY*0.95,type:"scythe",dmg:dmg,color:w.color,life:24,pierce:4});
+}else if(wKey==="plasma"){
+const baseAngle=Math.atan2(aimY,aimX);
+[-0.12,0.12].forEach(a=>{
+const ang=baseAngle+a;
+g.playerBullets.push({x:head.x+0.5,y:head.y+0.5,vx:Math.cos(ang)*1.2,vy:Math.sin(ang)*1.2,type:"plasma",dmg:dmg,color:w.color,life:26,pierce:2});
+});
+}
+}
+
+addMuzzleSpark(pos,color){
+if(this.particles.length>50)return;
+for(let i=0;i<4;i++){
+this.particles.push({x:(pos.x+0.5)*this.C,y:(pos.y+0.5)*this.C,vx:(Math.random()-0.5)*4,vy:(Math.random()-0.5)*4,color:color,life:9,max:9,r:2.8});
+}
+}
+
+addExplosion(x,y,color,ringRadius=36){
+if(this.particles.length>55)this.particles.splice(0,12);
+for(let i=0;i<11;i++){
+const ang=Math.random()*Math.PI*2,spd=1.2+Math.random()*3.2;
+this.particles.push({x:x*this.C,y:y*this.C,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,color:color,life:15,max:15,r:2.8});
+}
+if(this.rings.length<8){
+this.rings.push({x:x*this.C,y:y*this.C,r:4,maxR:ringRadius,color:color,life:14,max:14});
+}
+}
+
+addPopup(text,x,y,color="#ffd166"){
+if(this.popups.length>16)this.popups.shift();
+this.popups.push({text:text,x:(x+0.5)*this.C,y:y*this.C,vy:-0.95,life:22,color:color});
+}
+
+tick(){
+const g=this.g;
+g.step++;g.dir={...g.next};
+g.prevSnake=g.snake.map(p=>({...p}));
+for(const e of g.enemies){e.px=e.x;e.py=e.y}
+if(g.boss){g.boss.px=g.boss.x;g.boss.py=g.boss.y}
+
+const h=g.snake[0];
+let nx=h.x+g.dir.x,ny=h.y+g.dir.y;
+
+if(g.door&&nx>=this.N&&ny>=10&&ny<=14){
+this.nextRoom();return;
+}
+
+let wrapped=false;
+if(nx<0){nx=this.N-1;wrapped=true}
+else if(nx>=this.N){nx=0;wrapped=true}
+if(ny<0){ny=this.N-1;wrapped=true}
+else if(ny>=this.N){ny=0;wrapped=true}
+if(wrapped){
+this.sfx.warp();
+this.addExplosion(nx+0.5,ny+0.5,"#43d9ff",24);
+}else if(g.step%2===0){
+this.sfx.step();
+}
+
+const n={x:nx,y:ny};
+if(g.door&&n.x===24&&n.y>=10&&n.y<=14){
+this.nextRoom();return;
+}
+
+const ate=g.food&&this.dist(n,g.food)<=1;
+const ei=g.enemies.findIndex(e=>this.same(e,n));
+const bi=g.boss&&this.same(g.boss,n);
+
+if(ei>=0||bi){
+if(g.invuln<=0){
+if(g.shields>0){
+g.shields--;this.sfx.shieldBlock();this.toast("Escudo bloqueou o impacto!");this.addPopup("ESCUDO!",n.x,n.y,"#43d9ff");
+if(ei>=0){this.damageEnemy(g.enemies[ei],3);if(g.enemies[ei]&&g.enemies[ei].hp<=0)this.killEnemy(ei)}
+g.invuln=4;
+}else{
+if(ei>=0){this.damageEnemy(g.enemies[ei],3);if(g.enemies[ei]&&g.enemies[ei].hp<=0)this.killEnemy(ei)}
+this.hurt("colidiu com um inimigo!");return;
+}
+}
+}
+
+g.snake.unshift(n);
+if(ate){
+g.score+=15;
+const goldGain=Math.round(3*g.goldMult);
+g.gold+=goldGain;
+this.xp(1);this.sfx.pickup();
+if(g.hp<g.maxHp&&Math.random()<0.4){g.hp++;this.addPopup("+1 ♥",n.x,n.y,"#55f5a5")}
+g.food=this.free(2);
+this.toast(`+15 pts • +${goldGain} 🪙`);
+this.addPopup(`+15 • +${goldGain}🪙`,n.x,n.y,"#55f5a5");
+g.prevSnake.push({...g.snake.at(-1)});
+}else{
+g.snake.pop();
+}
+
+for(let i=g.orbs.length-1;i>=0;i--){
+if(this.dist(g.snake[0],g.orbs[i])<=1+g.magnet){
+const o=g.orbs[i];
+g.orbs.splice(i,1);g.score+=5;this.xp(1);this.sfx.orb();
+this.addPopup("+5 XP",o.x,o.y,"#43d9ff");
+}
+}
+
+for(let i=g.coins.length-1;i>=0;i--){
+if(this.dist(g.snake[0],g.coins[i])<=1+g.magnet){
+const c=g.coins[i];
+const val=Math.round((c.val||5)*g.goldMult);
+g.coins.splice(i,1);g.gold+=val;g.score+=10;this.sfx.coin();
+this.addPopup(`+${val} 🪙`,c.x,c.y,"#ffd166");
+}
+}
+
+this.updateProjectiles();
+
+if(this.autoFire&&(g.step%2===0)){
+const hasTarget=g.enemies.length>0||Boolean(g.boss);
+if(hasTarget)this.shoot();
+}
+
+this.processEnemies();
+if(g.boss)this.processBoss();
+
+if(g.invuln>0)g.invuln--;
+
+if(!g.enemies.length&&!g.boss&&g.type==="combat"&&!g.door){
+g.door=true;
+if(g.vamp){g.hp=Math.min(g.maxHp,g.hp+1);this.addPopup("+1 ♥ VAMP",g.snake[0].x,g.snake[0].y,"#ff4d6d")}
+if(g.shieldRegen){g.shields++;this.addPopup("+1 🛡 CELESTIAL",g.snake[0].x,g.snake[0].y,"#ffd166")}
+this.sfx.doorOpen();
+this.log("Sala limpa! Portal dourado aberto à direita.");
+this.toast("PORTA ABERTA! Entre no portal dourado!");
+}
+if(g.type==="treasure"&&!g.orbs.length&&!g.coins.length&&!g.door){
+g.door=true;this.sfx.doorOpen();this.toast("PORTA ABERTA!");
+}
+
+this.ui();
+}
+
+killEnemy(ei){
+const g=this.g,e=g.enemies[ei];
+if(!e)return;
+this.sfx.kill();
+this.addExplosion(e.x+0.5,e.y+0.5,"#ff4d6d",38);
+if(e.type==="bomber"){
+[-1,1].forEach(dx=>{
+[-1,1].forEach(dy=>{
+g.enemyBullets.push({x:e.x+0.5,y:e.y+0.5,vx:dx*0.38,vy:dy*0.38,type:"bomb",color:"#f72585",life:16});
+});
+});
+}
+g.coins.push({x:e.x,y:e.y,val:e.type==="golem"?8:5});
+g.enemies.splice(ei,1);
+g.score+=20;this.xp(2);
+this.addPopup("+20",e.x,e.y,"#ffd166");
+}
+
+updateProjectiles(){
+const g=this.g;
+for(let i=g.playerBullets.length-1;i>=0;i--){
+const b=g.playerBullets[i];
+b.x+=b.vx;b.y+=b.vy;b.life--;
+if(b.x<0||b.y<0||b.x>=this.N||b.y>=this.N||b.life<=0){
+if(b.type==="fire")this.explodeFireball(b.x,b.y,b.dmg);
+g.playerBullets.splice(i,1);continue;
+}
+
+for(let j=g.enemyBullets.length-1;j>=0;j--){
+const eb=g.enemyBullets[j];
+if(Math.hypot(b.x-eb.x,b.y-eb.y)<0.95){
+g.enemyBullets.splice(j,1);
+this.addExplosion(eb.x,eb.y,"#43d9ff",20);
+}
+}
+
+let hit=false;
+const hitRadius=b.type==="scythe"?1.25:0.95;
+for(let ei=g.enemies.length-1;ei>=0;ei--){
+const e=g.enemies[ei];
+if(Math.hypot(b.x-(e.x+0.5),b.y-(e.y+0.5))<hitRadius){
+hit=true;this.sfx.hit();
+if(b.chill){e.chill=4;this.addPopup("CONGELADO!",e.x,e.y,"#90e0ef")}
+this.damageEnemy(e,b.dmg);
+if(b.type==="fire")this.explodeFireball(b.x,b.y,b.dmg);
+if(e.hp<=0)this.killEnemy(ei);
+break;
+}
+}
+if(!hit&&g.boss){
+if(Math.hypot(b.x-(g.boss.x+0.5),b.y-(g.boss.y+0.5))<1.5){
+hit=true;this.damageBoss(b.dmg);
+if(b.type==="fire")this.explodeFireball(b.x,b.y,b.dmg);
+}
+}
+if(hit){
+if(b.pierce>0)b.pierce--;
+else g.playerBullets.splice(i,1);
+}
+}
+
+const head=g.snake[0];
+for(let i=g.enemyBullets.length-1;i>=0;i--){
+const eb=g.enemyBullets[i];
+eb.x+=eb.vx;eb.y+=eb.vy;eb.life--;
+if(eb.x<0||eb.y<0||eb.x>=this.N||eb.y>=this.N||eb.life<=0){
+g.enemyBullets.splice(i,1);continue;
+}
+if(Math.hypot(eb.x-(head.x+0.5),eb.y-(head.y+0.5))<0.65){
+g.enemyBullets.splice(i,1);
+if(g.invuln>0)continue;
+this.addExplosion(eb.x,eb.y,"#ff5578",24);
+if(g.shields>0){
+g.shields--;g.invuln=3;this.sfx.shieldBlock();
+this.toast("Escudo bloqueou o projétil!");this.addPopup("ESCUDO!",head.x,head.y,"#43d9ff");
+}else{
+this.hurt("atingido por projétil!");
+break;
+}
+}
+}
+}
+
+explodeFireball(gx,gy,dmg){
+const g=this.g;
+this.sfx.blast();
+this.shake=6;
+this.addExplosion(gx,gy,"#ff9f43",46);
+this.addPopup("BOOM!",gx,gy,"#ff9f43");
+for(let ei=g.enemies.length-1;ei>=0;ei--){
+const e=g.enemies[ei];
+if(Math.hypot(gx-(e.x+0.5),gy-(e.y+0.5))<=2.6){
+this.damageEnemy(e,dmg);
+if(e.hp<=0)this.killEnemy(ei);
+}
+}
+if(g.boss&&Math.hypot(gx-(g.boss.x+0.5),gy-(g.boss.y+0.5))<=2.8){
+this.damageBoss(dmg);
+}
+for(let i=g.enemyBullets.length-1;i>=0;i--){
+const eb=g.enemyBullets[i];
+if(Math.hypot(gx-eb.x,gy-eb.y)<=2.5)g.enemyBullets.splice(i,1);
+}
+}
+
+damageEnemy(e,dmg){
+e.hp=Math.max(0,Math.round((e.hp-dmg)*10)/10);
+e.flash=3;
+this.addPopup("-"+Math.round(dmg*10)/10,e.x,e.y,"#ff5578");
+}
+
+processEnemies(){
+const g=this.g,t=g.snake[0];
+for(const e of g.enemies){
+if(e.flash>0)e.flash--;
+if(e.chill>0){e.chill--;if(g.step%2===0)continue;}
+e.phase++;
+const d=this.dist(e,t);
+
+if(e.type==="crawler"){
+if(d<=3&&e.telegraph===0&&e.phase%3===0){
+e.telegraph=1;e.aimDx=Math.sign(t.x-e.x);e.aimDy=Math.sign(t.y-e.y);
+this.addPopup("BOTE!",e.x,e.y,"#ffd166");
+}else if(e.telegraph>0){
+e.telegraph=0;
+e.x=Math.max(1,Math.min(23,e.x+e.aimDx));
+e.y=Math.max(1,Math.min(23,e.y+e.aimDy));
+this.sfx.enemyShot();
+}else if(e.phase%3===0){
+this.stepTowards(e,t);
+}
+}else if(e.type==="archer"){
+if(e.telegraph>0){
+e.telegraph=0;
+this.sfx.enemyShot();
+const angle=Math.atan2((t.y+0.5)-(e.y+0.5),(t.x+0.5)-(e.x+0.5));
+g.enemyBullets.push({x:e.x+0.5,y:e.y+0.5,vx:Math.cos(angle)*0.52,vy:Math.sin(angle)*0.52,type:"arrow",color:"#c58aff",life:24});
+}else if(d<=11&&e.phase%6===0){
+e.telegraph=1;
+this.addPopup("MIRA!",e.x,e.y,"#ff4d6d");
+}else if(e.phase%3===0){
+if(d<4)this.stepAway(e,t);
+else if(d>8)this.stepTowards(e,t);
+}
+}else if(e.type==="mage"){
+if(e.telegraph>0){
+e.telegraph=0;
+this.sfx.enemyShot();
+const angle=Math.atan2((t.y+0.5)-(e.y+0.5),(t.x+0.5)-(e.x+0.5));
+g.enemyBullets.push({x:e.x+0.5,y:e.y+0.5,vx:Math.cos(angle)*0.44,vy:Math.sin(angle)*0.44,type:"fireball",color:"#ff9f43",life:26});
+}else if(e.phase%7===0){
+e.telegraph=1;
+this.addPopup("MAGIA!",e.x,e.y,"#ffd166");
+}else if(e.phase%4===0){
+if(d<3)this.stepAway(e,t);
+else this.stepTowards(e,t);
+}
+}else if(e.type==="golem"){
+if(e.phase%8===0){
+this.sfx.enemyShot();
+this.addExplosion(e.x+0.5,e.y+0.5,"#48cae4",28);
+[{x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}].forEach(dir=>{
+g.enemyBullets.push({x:e.x+0.5,y:e.y+0.5,vx:dir.x*0.44,vy:dir.y*0.44,type:"rock",color:"#48cae4",life:18});
+});
+}else if(e.phase%4===0){
+this.stepTowards(e,t);
+}
+}else if(e.type==="necro"){
+if(e.phase%8===0){
+this.sfx.enemyShot();
+this.addExplosion(e.x+0.5,e.y+0.5,"#80ed99",28);
+[-0.4,0.4].forEach(offset=>{
+const angle=Math.atan2((t.y+0.5)-(e.y+0.5),(t.x+0.5)-(e.x+0.5))+offset;
+g.enemyBullets.push({x:e.x+0.5,y:e.y+0.5,vx:Math.cos(angle)*0.45,vy:Math.sin(angle)*0.45,type:"skull",color:"#80ed99",life:24});
+});
+}else if(e.phase%4===0){
+this.stepAway(e,t);
+}
+}else if(e.type==="assassin"){
+if(e.phase%6===0){
+const p=this.free(5);
+this.addExplosion(e.x+0.5,e.y+0.5,"#ffd166",22);
+e.x=p.x;e.y=p.y;e.px=p.x;e.py=p.y;
+this.addPopup("PASSO SOMBRIO!",e.x,e.y,"#ffd166");
+}else if(e.phase%2===0){
+this.stepTowards(e,t);
+}
+}else if(e.type==="valkyrie"){
+if(e.phase%7===0){
+this.sfx.enemyShot();
+const base=Math.atan2((t.y+0.5)-(e.y+0.5),(t.x+0.5)-(e.x+0.5));
+[-0.25,0,0.25].forEach(a=>{
+g.enemyBullets.push({x:e.x+0.5,y:e.y+0.5,vx:Math.cos(base+a)*0.48,vy:Math.sin(base+a)*0.48,type:"spear",color:"#72efdd",life:22});
+});
+this.addPopup("LANÇAS!",e.x,e.y,"#72efdd");
+}else if(e.phase%3===0){
+this.stepTowards(e,t);
+}
+}else if(e.type==="bomber"){
+if(e.phase%2===0){
+this.stepTowards(e,t);
+}
+}
+}
+}
+
+stepTowards(e,t){
+const dx=Math.sign(t.x-e.x),dy=Math.sign(t.y-e.y);
+let opts=Math.random()<0.5?[{x:e.x+dx,y:e.y},{x:e.x,y:e.y+dy}]:[{x:e.x,y:e.y+dy},{x:e.x+dx,y:e.y}];
+opts=opts.filter(p=>p.x>0&&p.y>0&&p.x<24&&p.y<24&&!this.g.snake.some(s=>this.same(s,p))&&!this.g.enemies.some(o=>o!==e&&this.same(o,p)));
+if(opts.length)Object.assign(e,opts[0]);
+}
+
+stepAway(e,t){
+const dx=-Math.sign(t.x-e.x),dy=-Math.sign(t.y-e.y);
+const opts=[{x:e.x+dx,y:e.y},{x:e.x,y:e.y+dy}].filter(p=>p.x>0&&p.y>0&&p.x<24&&p.y<24&&!this.g.enemies.some(o=>o!==e&&this.same(o,p)));
+if(opts.length)Object.assign(e,opts[0]);
+}
+
+processBoss(){
+const b=this.g.boss,g=this.g,t=g.snake[0];
+b.phase++;if(b.flash>0)b.flash--;
+if(b.hp<=b.max*0.4&&!b.rage){
+b.rage=true;
+this.sfx.blast();this.shake=8;
+this.toast(b.title+" entrou em fúria!");
+this.addPopup("FÚRIA!",b.x,b.y,"#ff416d");
+}
+
+if(b.phase%6===0){
+this.sfx.enemyShot();
+const count=b.rage?6:4;
+for(let i=0;i<count;i++){
+const angle=(Math.PI*2/count)*i+(b.phase*0.15);
+g.enemyBullets.push({x:b.x+0.5,y:b.y+0.5,vx:Math.cos(angle)*0.46,vy:Math.sin(angle)*0.46,type:"boss",color:b.rageColor||"#ff416d",life:24});
+}
+}
+
+if(b.phase%9===0){
+b.attack={axis:Math.random()<0.5?"x":"y",value:t.x,ttl:2,warn:true};
+if(b.attack.axis==="y")b.attack.value=t.y;
+this.toast("Aviso de feixe na linha marcada!");
+}else if(b.attack){
+if(b.attack.warn){
+b.attack.warn=false;
+}else{
+const hit=b.attack.axis==="x"?t.x===b.attack.value:t.y===b.attack.value;
+b.attack=null;
+if(hit&&g.invuln<=0){
+if(g.shields>0){g.shields--;g.invuln=3;this.sfx.shieldBlock();this.toast("Escudo bloqueou o feixe!")}
+else this.hurt("atingido pelo feixe do Chefe!");
+}
+}
+}else if(b.phase%4===0){
+const dx=Math.sign(t.x-b.x),dy=Math.sign(t.y-b.y);
+const opts=[{x:b.x+dx,y:b.y},{x:b.x,y:b.y+dy}].filter(p=>p.x>1&&p.y>1&&p.x<24&&p.y<24&&!this.g.snake.some(s=>this.same(s,p)));
+if(opts.length)Object.assign(b,opts[0]);
+}
+}
+
+pulse(){
+const g=this.g;
+if(this.state!=="running"||g.pulses<=0)return;
+g.pulses--;this.sfx.blast();this.shake=7;
+const h=g.snake[0];let hits=0;
+this.addExplosion(h.x+0.5,h.y+0.5,"#43d9ff",65);
+for(let i=g.enemies.length-1;i>=0;i--){
+if(this.dist(h,g.enemies[i])<=9){
+this.damageEnemy(g.enemies[i],5);
+if(g.enemies[i].hp<=0)this.killEnemy(i);
+hits++;
+}
+}
+if(g.boss&&this.dist(h,g.boss)<=10){
+this.damageBoss(4);hits++;
+}
+g.enemyBullets=[];
+this.log(hits?`Pulso sônico atingiu ${hits} alvo(s) e limpou projéteis!`:"Pulso limpou os projéteis da sala.");
+this.toast("PULSO SÔNICO • "+g.pulses+" restante(s)");
+this.ui();
+}
+
+damageBoss(n){
+const b=this.g.boss;if(!b)return;
+b.hp=Math.max(0,Math.round((b.hp-n)*10)/10);b.flash=3;
+this.sfx.hit();
+this.addPopup("-"+n+" HP",b.x,b.y,"#ff5578");
+if(b.hp<=0){
+this.sfx.blast();this.shake=10;
+this.addExplosion(b.x+0.5,b.y+0.5,"#c56bff",70);
+this.g.gold+=Math.round(25*this.g.goldMult);
+this.g.boss=null;this.g.score+=150;this.g.shields+=2;this.g.hp=Math.min(this.g.maxHp,this.g.hp+1);this.g.door=true;this.xp(4);
+this.sfx.doorOpen();
+this.log("CHEFE DERROTADO! +150 pts, +25 ouro, +2 escudos.");
+this.toast("VITÓRIA SOBRE O CHEFE! +25 🪙");
+}
+this.ui();
+}
+
+hurt(reason="sofreu dano!"){
+const g=this.g;
+if(g.invuln>0)return;
+if(g.shields>0){
+g.shields--;g.invuln=4;
+this.sfx.shieldBlock();
+this.toast("Escudo absorveu o dano!");
+this.addPopup("ESCUDO!",g.snake[0].x,g.snake[0].y,"#43d9ff");
+this.ui();return;
+}
+this.sfx.hurt();this.shake=8;
+g.hp--;g.invuln=6;
+this.toast("Cuidado: "+reason);
+this.addPopup("-1 ♥",g.snake[0].x,g.snake[0].y,"#ff5578");
+if(g.hp<=0){this.end();return}
+this.ui();
+}
+
+xp(n){
+const g=this.g;g.xp+=n;
+if(g.xp>=g.need){
+g.xp-=g.need;g.level++;g.need=4+g.level*2;
+this.levelUp();
+}
+}
+
+levelUp(){
+this.state="upgrade";clearTimeout(this.timer);this.sfx.levelUp();
+const keys=Object.keys(this.relics).sort(()=>Math.random()-0.5).slice(0,3);
+const d=this.$("dialog");
+d.innerHTML='<div class="emoji">✨</div><h2>Nível '+this.g.level+'!</h2><p>Escolha uma relíquia para fortalecer seu herói:</p><div class="choices" id="choices"></div>';
+keys.forEach((k,i)=>{
+const r=this.relics[k],b=document.createElement("button");
+b.className="choice";
+b.innerHTML=`<span>${r.icon}</span><b>${i+1}. ${r.name}</b><small>${r.desc}</small>`;
+b.onclick=()=>this.pick(k);
+d.querySelector("#choices").appendChild(b);
+});
+this.$("overlay").classList.remove("off");
+this.$("pauseBtn").disabled=true;
+}
+
+pick(key){
+const k=typeof key==="number"?Object.keys(this.relics).find((_,i)=>i===key):key;
+if(!k)return;
+this.sfx.pickup();
+this.relics[k].apply(this.g);
+this.g.relics.push(k);
+this.state="running";
+this.$("pauseBtn").disabled=false;
+this.log("Relíquia obtida: "+this.relics[k].name);
+this.hide();this.ui();this.schedule();
+}
+
+nextRoom(){
+const g=this.g;g.room++;g.pulses=Math.min(8,g.pulses+1);
+const startPos=[{x:3,y:12},{x:2,y:12},{x:1,y:12}];
+while(startPos.length<g.snake.length)startPos.push({x:1,y:12});
+g.snake=startPos.map(p=>({...p}));
+g.prevSnake=startPos.map(p=>({...p}));
+g.dir={x:1,y:0};g.next={x:1,y:0};g.invuln=4;
+this.sfx.doorOpen();
+this.spawnRoom();
+this.log("Você avançou para a sala "+g.room+".");
+this.ui();this.toast("SALA "+g.room);
+}
+
+end(){
+this.state="over";clearTimeout(this.timer);
+if(this.g.score>this.best){this.best=this.g.score;this.saveBest()}
+this.$("pauseBtn").disabled=true;
+const d=this.$("dialog");
+d.innerHTML=`<div class="emoji">🏆</div><h2>Fim da Aventura</h2><p>Pontuação final: <b>${this.g.score}</b> • Ouro: 🪙 ${this.g.gold} • Salas: ${this.g.room} • Recorde: ${this.best}<br>Escolha outro herói abaixo para tentar uma nova estratégia:</p><div class="hero-roster" id="overlayHeroGrid"></div><button class="btn primary" id="mainBtn" style="width:100%">↻ Tentar novamente</button><button class="btn secondary" id="helpBtn" style="width:100%;margin-top:7px">Como jogar</button>`;
+this.renderOverlayHeroGrid();
+d.querySelector("#mainBtn").onclick=()=>this.start();
+d.querySelector("#helpBtn").onclick=()=>this.overlay("🎮","Como Jogar, Heróis & Loja","<b>8 Heróis:</b> Escolha entre Víbora, Dragão, Mecha, Espectro, Glacial, Voltaica, Hidra ou Leviatã!<br><b>Paredes-Portal:</b> Atravesse qualquer borda da sala sem levar dano!<br><b>Loja do Mercador (Tecla B):</b> Gaste ouro (🪙) em poções, escudos, dano e armas!");
+this.$("overlay").classList.remove("off");
+this.ui();
+}
+
+overlay(icon,title,text){
+const d=this.$("dialog");
+d.innerHTML=`<div class="emoji">${icon}</div><h2>${title}</h2><p>${text}</p><button class="btn primary" id="mainBtn" style="width:100%">▶ Continuar</button><button class="btn secondary" id="helpBtn" style="width:100%;margin-top:7px">Como jogar</button>`;
+d.querySelector("#mainBtn").onclick=()=>{if(this.state==="paused"||this.state==="shop")this.resume();else this.start()};
+d.querySelector("#helpBtn").onclick=()=>this.overlay("🎮","Como Jogar, Heróis & Loja","<b>8 Heróis:</b> Escolha entre Víbora, Dragão, Mecha, Espectro, Glacial, Voltaica, Hidra ou Leviatã!<br><b>Paredes-Portal:</b> Atravesse qualquer borda da sala sem levar dano!<br><b>Loja do Mercador (Tecla B):</b> Gaste o ouro (🪙) obtido dos inimigos em poções, escudos, dano e armas!<br><b>Combate:</b> Espaço/Z atira, Q/E troca de arma, H abre a Galeria de Heróis, X solta o Pulso Sônico.");
+this.$("overlay").classList.remove("off");
+}
+
 hide(){this.$("overlay").classList.add("off")}
-toast(t){let el=this.$("toast");el.textContent=t;el.classList.add("show");clearTimeout(this.toastTimer);this.toastTimer=setTimeout(()=>el.classList.remove("show"),1100)}
-log(t){let el=document.createElement("div");el.textContent="› "+t;this.$("log").prepend(el);while(this.$("log").children.length>8)this.$("log").lastChild.remove()}
-ui(){let g=this.g;this.$("score").textContent=String(g.score).padStart(3,"0");this.$("health").textContent="♥".repeat(g.hp)+"♡".repeat(g.maxHp-g.hp);this.$("resources").textContent=`🛡 ${g.shields} • Pulso ${g.pulses}`;this.$("level").textContent=g.level;this.$("xp").textContent=`${g.xp} / ${g.need} XP`;this.$("room").textContent=g.room;this.$("roomType").textContent={combat:"Combate",boss:"CHEFE",treasure:"Tesouro",rest:"Descanso"}[g.type];this.$("roomName").textContent=g.roomName;this.$("roomDesc").textContent=g.roomDesc;this.$("bossbar").classList.toggle("hide",!g.boss);if(g.boss){this.$("bosshp").style.width=100*g.boss.hp/g.boss.max+"%";this.$("bosstext").textContent=`${g.boss.hp} / ${g.boss.max}`}let tr=this.$("track");tr.innerHTML="";for(let i=0;i<5;i++){let x=document.createElement("i");if(i<(g.room-1)%5)x.className="done";if(i===(g.room-1)%5)x.className="current";tr.appendChild(x)}let list=this.$("relicList");list.innerHTML="";if(!g.relics.length)list.innerHTML='<div class="item"><div class="ico">✨</div><div><b>Nenhuma relíquia</b><small>Suba de nível para escolher melhorias.</small></div></div>';else{let counts={};g.relics.forEach(k=>counts[k]=(counts[k]||0)+1);Object.keys(counts).forEach(k=>{let r=this.relics[k],e=document.createElement("div");e.className="item";e.innerHTML=`<div class="ico">${r.icon}</div><div><b>${r.name} ×${counts[k]}</b><small>${r.desc}</small></div>`;list.appendChild(e)})}}
-frame(t){this.anim=t;this.draw();requestAnimationFrame(x=>this.frame(x))}
-draw(){let c=this.ctx,g=this.g,N=this.N,C=this.C;c.clearRect(0,0,600,600);c.fillStyle=g.type==="boss"?"#180e20":g.type==="treasure"?"#171426":g.type==="rest"?"#0b1c22":"#081426";c.fillRect(0,0,600,600);
-for(let y=0;y<N;y++)for(let x=0;x<N;x++){c.fillStyle=(x+y)%2?"#ffffff04":"#ffffff08";c.fillRect(x*C,y*C,C,C)}
-c.strokeStyle=g.type==="boss"?"#a84d80":"#294966";c.lineWidth=5;c.strokeRect(3,3,594,594);c.strokeStyle="#263b55";c.lineWidth=1;for(let i=0;i<=N;i++){c.beginPath();c.moveTo(i*C,0);c.lineTo(i*C,600);c.stroke();c.beginPath();c.moveTo(0,i*C);c.lineTo(600,i*C);c.stroke()}
-if(g.door){c.save();c.shadowColor="#ffd166";c.shadowBlur=18;c.fillStyle="#ffd166";c.fillRect(584,264,13,72);c.restore();c.fillStyle="#ffe7a6";c.font="bold 10px system-ui";c.textAlign="center";c.fillText("SAÍDA",570,252)}
-this.circle(g.food,"#ffd166",7);g.orbs.forEach(p=>this.diamond(p,"#43d9ff"));
-g.enemies.forEach(e=>{let x=(e.x+.5)*C,y=(e.y+.5)*C;c.save();c.shadowColor="#ff5578";c.shadowBlur=13;c.fillStyle="#ef4773";c.beginPath();c.arc(x,y,9,0,Math.PI*2);c.fill();c.fillStyle="#31091b";c.fillRect(x-5,y-3,3,3);c.fillRect(x+3,y-3,3,3);c.restore()});
-if(g.boss){let b=g.boss,x=(b.x+.5)*C,y=(b.y+.5)*C;c.save();c.shadowColor="#c56bff";c.shadowBlur=24;c.fillStyle="#a65ad4";c.beginPath();c.arc(x,y,19,0,Math.PI*2);c.fill();c.fillStyle="#321044";c.fillRect(x-9,y-4,5,5);c.fillRect(x+4,y-4,5,5);c.restore();c.fillStyle="#f4c8ff";c.font="bold 10px system-ui";c.textAlign="center";c.fillText("BOSS",x,y-25);if(b.attack){c.fillStyle="#ff557833";if(b.attack.axis==="x")c.fillRect(b.attack.value*C,0,C,600);else c.fillRect(0,b.attack.value*C,600,C)}}
-let pulse=1+Math.sin(this.anim/120)*.035;for(let i=g.snake.length-1;i>=0;i--){let p=g.snake[i],x=(p.x+.5)*C,y=(p.y+.5)*C,r=(i===0?10:9)*pulse;c.save();c.shadowColor="#43ffad";c.shadowBlur=i===0?17:7;c.fillStyle=i===0?"#79ffc2":`hsl(${150-i},75%,${49-Math.min(i,15)*.65}%)`;c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fill();c.restore();if(i>0){c.fillStyle="#d1ffe555";c.beginPath();c.arc(x-3,y-3,2,0,Math.PI*2);c.fill()}}
-let h=g.snake[0],x=(h.x+.5)*C,y=(h.y+.5)*C,d=g.dir;c.fillStyle="#073322";for(let s of [-1,1]){c.beginPath();c.arc(x+d.x*4-d.y*4*s,y+d.y*4+d.x*4*s,2.3,0,Math.PI*2);c.fill()}if(g.shields){c.strokeStyle="#43d9ff";c.lineWidth=2;c.beginPath();c.arc(x,y,15,0,Math.PI*2);c.stroke()}}
-circle(p,color,r){let c=this.ctx,x=(p.x+.5)*this.C,y=(p.y+.5)*this.C;c.save();c.shadowColor=color;c.shadowBlur=17;c.fillStyle=color;c.beginPath();c.arc(x,y,r,0,Math.PI*2);c.fill();c.restore()}
-diamond(p,color){let c=this.ctx,x=(p.x+.5)*this.C,y=(p.y+.5)*this.C;c.save();c.translate(x,y);c.rotate(Math.PI/4);c.shadowColor=color;c.shadowBlur=12;c.fillStyle=color;c.fillRect(-5,-5,10,10);c.restore()}
+toast(t){const el=this.$("toast");el.textContent=t;el.classList.add("show");clearTimeout(this.toastTimer);this.toastTimer=setTimeout(()=>el.classList.remove("show"),1250)}
+log(t){const el=document.createElement("div");el.textContent="› "+t;this.$("log").prepend(el);while(this.$("log").children.length>8)this.$("log").lastChild.remove()}
+
+ui(){
+const g=this.g;
+this.$("score").textContent=String(g.score).padStart(3,"0");
+this.$("bestLabel").textContent="Recorde: "+Math.max(this.best,g.score);
+this.$("hpNum").textContent=`${Math.max(0,g.hp)}/${g.maxHp}`;
+this.$("hpBar").style.width=Math.max(0,Math.min(100,(g.hp/g.maxHp)*100))+"%";
+this.$("health").textContent="♥".repeat(Math.max(0,g.hp))+"♡".repeat(Math.max(0,g.maxHp-g.hp));
+this.$("resources").textContent=`🛡 ${g.shields} • Pulso ${g.pulses}`;
+this.$("gold").textContent=`🪙 ${g.gold}`;
+this.$("level").textContent=g.level;
+this.$("xpBar").style.width=Math.max(0,Math.min(100,(g.xp/g.need)*100))+"%";
+this.$("xp").textContent=`${g.xp} / ${g.need} XP`;
+this.$("room").textContent=g.room;
+this.$("roomType").textContent={combat:"Combate",boss:"CHEFE",treasure:"Tesouro",rest:"Descanso & Loja"}[g.type];
+this.$("roomName").textContent=g.roomName;
+this.$("roomDesc").textContent=g.roomDesc;
+
+const curW=this.weapons[this.weaponList[g.weaponIdx]]||this.weapons.dart;
+if(curW){
+this.$("weaponIco").textContent=curW.icon;
+this.$("weaponName").textContent=curW.name;
+const bonus=g.bonusDmg?` (+${g.bonusDmg} bônus)`:"";
+this.$("weaponDesc").textContent=`${curW.desc}${bonus}`;
+}
+
+this.$("bossbar").classList.toggle("hide",!g.boss);
+if(g.boss){
+this.$("bosshp").style.width=Math.max(0,100*g.boss.hp/g.boss.max)+"%";
+this.$("bosstext").textContent=`${g.boss.hp} / ${g.boss.max}`;
+}
+
+const tr=this.$("track");tr.innerHTML="";
+for(let i=0;i<5;i++){
+const x=document.createElement("i");
+if(i<(g.room-1)%5)x.className="done";
+if(i===(g.room-1)%5)x.className="current";
+tr.appendChild(x);
+}
+
+const list=this.$("relicList");list.innerHTML="";
+if(!g.relics.length)list.innerHTML='<div class="item"><div class="ico">✨</div><div><b>Nenhuma relíquia</b><small>Suba de nível ou compre na Loja.</small></div></div>';
+else{
+const counts={};
+g.relics.forEach(k=>counts[k]=(counts[k]||0)+1);
+Object.keys(counts).forEach(k=>{
+const r=this.relics[k],e=document.createElement("div");e.className="item";
+e.innerHTML=`<div class="ico">${r.icon}</div><div><b>${r.name} ×${counts[k]}</b><small>${r.desc}</small></div>`;
+list.appendChild(e);
+});
+}
+}
+
+lerpPos(prev,curr,alpha){
+if(!prev)return{x:curr.x,y:curr.y};
+const dx=curr.x-prev.x,dy=curr.y-prev.y;
+if(Math.abs(dx)>1.5||Math.abs(dy)>1.5)return{x:curr.x,y:curr.y};
+return{x:prev.x+dx*alpha,y:prev.y+dy*alpha};
+}
+
+frame(t){
+this.anim=t;
+this.draw();
+requestAnimationFrame(x=>this.frame(x));
+}
+
+drawHealthBar(c,x,y,w,h,hp,maxHp,color="#55f5a5"){
+const pct=Math.max(0,Math.min(1,hp/maxHp));
+c.fillStyle="#050b16cc";
+c.fillRect(x-w/2-1,y-1,w+2,h+2);
+c.fillStyle="#2b192e";
+c.fillRect(x-w/2,y,w,h);
+c.fillStyle=color;
+c.fillRect(x-w/2,y,w*pct,h);
+}
+
+draw(){
+const c=this.ctx,g=this.g,C=this.C;
+const alpha=this.state==="running"?Math.min(1,(this.anim-this.tickStart)/this.tickDur):1;
+
+c.save();
+if(this.shake>0.2){
+const sx=(Math.random()-0.5)*this.shake,sy=(Math.random()-0.5)*this.shake;
+c.translate(sx,sy);
+this.shake*=0.82;
+}else{
+this.shake=0;
+}
+
+const bg=this.bgCache[g.type]||this.bgCache.combat;
+c.drawImage(bg,0,0);
+
+const pulseWave=Math.sin(this.anim/180);
+
+if(g.door){
+const glow=14+pulseWave*4;
+c.fillStyle="#ffd16633";
+c.fillRect(580-glow/2,236,18+glow/2,128);
+c.fillStyle="#ffd166";
+c.fillRect(584,240,14,120);
+c.fillStyle="#ffe7a6";c.font="bold 10px system-ui";c.textAlign="center";
+c.fillText("SAÍDA ▶",560,232);
+}
+
+if(g.food){
+const fx=(g.food.x+0.5)*C,fy=(g.food.y+0.5)*C+pulseWave*1.5;
+c.fillStyle="#ffd16635";c.beginPath();c.arc(fx,fy,11.5+pulseWave*1.5,0,Math.PI*2);c.fill();
+c.fillStyle="#ff6b6b";c.beginPath();c.arc(fx,fy,7,0,Math.PI*2);c.fill();
+c.fillStyle="#ffd166";c.beginPath();c.arc(fx-2,fy-2,2.2,0,Math.PI*2);c.fill();
+c.fillStyle="#55f5a5";c.fillRect(fx-1,fy-10,3,4);
+}
+
+for(let i=0;i<g.orbs.length;i++){
+const p=g.orbs[i],ox=(p.x+0.5)*C,oy=(p.y+0.5)*C+Math.sin(this.anim/150+i)*1.5;
+c.fillStyle="#43d9ff33";c.beginPath();c.arc(ox,oy,9,0,Math.PI*2);c.fill();
+c.fillStyle="#43d9ff";
+c.beginPath();
+c.moveTo(ox,oy-6.5);c.lineTo(ox+6.5,oy);c.lineTo(ox,oy+6.5);c.lineTo(ox-6.5,oy);
+c.closePath();c.fill();
+}
+
+for(let i=0;i<g.coins.length;i++){
+const cn=g.coins[i],cx=(cn.x+0.5)*C,cy=(cn.y+0.5)*C+Math.cos(this.anim/140+i)*1.5;
+const spin=Math.abs(Math.cos(this.anim/160+i));
+c.fillStyle="#ffd16638";c.beginPath();c.arc(cx,cy,9.5,0,Math.PI*2);c.fill();
+c.fillStyle="#ffd166";c.beginPath();c.ellipse(cx,cy,Math.max(2,6.5*spin),6.5,0,0,Math.PI*2);c.fill();
+c.fillStyle="#b07d12";c.fillRect(cx-1,cy-3,2,6);
+}
+
+const headPos=this.lerpPos(g.prevSnake[0],g.snake[0],alpha);
+const hx=(headPos.x+0.5)*C,hy=(headPos.y+0.5)*C;
+
+for(let i=0;i<g.enemies.length;i++){
+const e=g.enemies[i];
+const ep=this.lerpPos({x:e.px??e.x,y:e.py??e.y},e,alpha);
+const x=(ep.x+0.5)*C,y=(ep.y+0.5)*C+Math.sin(this.anim/130+i)*1.4;
+
+if(e.telegraph>0){
+c.strokeStyle="#ff336699";c.lineWidth=1.8;
+c.beginPath();c.moveTo(x,y);c.lineTo(hx,hy);c.stroke();
+c.fillStyle="#ffd166";c.font="bold 10px system-ui";c.textAlign="center";
+c.fillText("⚠️",x,y-15);
+}
+
+const colorMap={crawler:"#ff4d6d",archer:"#c77dff",mage:"#ff9f43",golem:"#48cae4",necro:"#80ed99",assassin:"#ffd166",valkyrie:"#72efdd",bomber:"#f72585"};
+const color=e.flash>0?"#ffffff":e.chill>0?"#90e0ef":(colorMap[e.type]||"#ff4d6d");
+const rad=e.type==="golem"?11.5:e.type==="valkyrie"?10.5:9.5;
+
+c.fillStyle=color+"33";c.beginPath();c.arc(x,y,rad+4,0,Math.PI*2);c.fill();
+c.fillStyle=color;c.beginPath();c.arc(x,y,rad,0,Math.PI*2);c.fill();
+
+c.fillStyle="#12061c";
+c.fillRect(x-4,y-3,2.5,3);c.fillRect(x+1.5,y-3,2.5,3);
+if(e.type==="mage"||e.type==="necro"){
+c.strokeStyle="#ffffffaa";c.lineWidth=1.5;
+c.beginPath();c.arc(x,y,rad-2,0,Math.PI);c.stroke();
+}else if(e.type==="assassin"){
+c.fillStyle="#ff2a5f";c.fillRect(x-5,y-5,10,2);
+}else if(e.type==="valkyrie"){
+c.fillStyle="#ffffff";
+c.beginPath();c.moveTo(x-rad,y);c.lineTo(x-rad-5,y-6);c.lineTo(x-rad-2,y+3);c.closePath();c.fill();
+c.beginPath();c.moveTo(x+rad,y);c.lineTo(x+rad+5,y-6);c.lineTo(x+rad+2,y+3);c.closePath();c.fill();
+}else if(e.type==="bomber"){
+c.fillStyle="#ffd166";c.beginPath();c.arc(x,y-rad-2,2.5,0,Math.PI*2);c.fill();
+}
+
+this.drawHealthBar(c,x,y+rad+3,20,3.5,e.hp,e.maxHp,e.chill>0?"#90e0ef":"#ff5578");
+}
+
+if(g.boss){
+const b=g.boss;
+const bp=this.lerpPos({x:b.px??b.x,y:b.py??b.y},b,alpha);
+const x=(bp.x+0.5)*C,y=(bp.y+0.5)*C+Math.sin(this.anim/160)*2;
+if(b.attack){
+c.fillStyle=b.attack.warn?"#ffd16638":"#ff2a5f77";
+if(b.attack.axis==="x")c.fillRect(b.attack.value*C,0,C,600);
+else c.fillRect(0,b.attack.value*C,600,C);
+}
+const bcol=b.flash>0?"#ffffff":b.rage?(b.rageColor||"#ff2a6d"):(b.color||"#b55fe6");
+c.fillStyle=bcol+"30";c.beginPath();c.arc(x,y,27+pulseWave*2,0,Math.PI*2);c.fill();
+c.fillStyle=bcol;c.beginPath();c.arc(x,y,19.5,0,Math.PI*2);c.fill();
+c.fillStyle="#280838";c.fillRect(x-8,y-5,5,5);c.fillRect(x+3,y-5,5,5);
+c.fillStyle="#ffd166";
+c.beginPath();c.moveTo(x-12,y-14);c.lineTo(x-6,y-23);c.lineTo(x,y-16);c.lineTo(x+6,y-23);c.lineTo(x+12,y-14);c.closePath();c.fill();
+this.drawHealthBar(c,x,y+23,42,5,b.hp,b.max,"#ff416d");
+}
+
+for(let i=0;i<g.playerBullets.length;i++){
+const b=g.playerBullets[i],bx=b.x*C,by=b.y*C;
+c.fillStyle=b.color+"44";
+c.beginPath();c.arc(bx-b.vx*6,by-b.vy*6,b.type==="fire"?4.5:b.type==="scythe"?6:3,0,Math.PI*2);c.fill();
+c.fillStyle=b.color;
+c.beginPath();c.arc(bx,by,b.type==="fire"?6:b.type==="scythe"?7.5:b.type==="plasma"?5.5:4.2,0,Math.PI*2);c.fill();
+c.fillStyle="#ffffff";
+c.beginPath();c.arc(bx,by,2,0,Math.PI*2);c.fill();
+}
+
+for(let i=0;i<g.enemyBullets.length;i++){
+const eb=g.enemyBullets[i],ex=eb.x*C,ey=eb.y*C;
+c.fillStyle=eb.color+"44";
+c.beginPath();c.arc(ex,ey,7,0,Math.PI*2);c.fill();
+c.fillStyle=eb.color;
+c.beginPath();c.arc(ex,ey,4.2,0,Math.PI*2);c.fill();
+}
+
+for(let i=this.rings.length-1;i>=0;i--){
+const rg=this.rings[i];
+rg.r+=(rg.maxR-rg.r)*0.22;
+rg.life--;
+if(rg.life<=0){this.rings.splice(i,1);continue}
+c.save();
+c.strokeStyle=rg.color;
+c.globalAlpha=rg.life/rg.max;
+c.lineWidth=2.5;
+c.beginPath();c.arc(rg.x,rg.y,rg.r,0,Math.PI*2);c.stroke();
+c.restore();
+}
+
+for(let i=this.particles.length-1;i>=0;i--){
+const p=this.particles[i];
+p.x+=p.vx;p.y+=p.vy;p.life--;
+if(p.life<=0){this.particles.splice(i,1);continue}
+c.fillStyle=p.color;
+c.beginPath();c.arc(p.x,p.y,p.r*(p.life/p.max),0,Math.PI*2);c.fill();
+}
+
+const heroTheme=this.heroes[g.hero]||this.heroes.viper;
+const blink=g.invuln>0&&Math.floor(this.anim/75)%2===0;
+
+for(let i=g.snake.length-1;i>=0;i--){
+const cur=g.snake[i],prv=g.prevSnake[i]||cur;
+const sp=this.lerpPos(prv,cur,alpha);
+const sx=(sp.x+0.5)*C,sy=(sp.y+0.5)*C;
+const taper=i===0?11:Math.max(6.2,9.8-i*0.35);
+
+if(i===0){
+c.fillStyle=heroTheme.head+"33";
+c.beginPath();c.arc(sx,sy,15.5,0,Math.PI*2);c.fill();
+}
+c.fillStyle=blink?"#ffffffcc":i===0?heroTheme.head:i%2===0?heroTheme.body1:heroTheme.body2;
+c.beginPath();c.arc(sx,sy,taper,0,Math.PI*2);c.fill();
+}
+
+const d=g.dir;
+c.fillStyle=heroTheme.eye;
+for(const s of [-1,1]){
+c.beginPath();c.arc(hx+d.x*4-d.y*4*s,hy+d.y*4+d.x*4*s,2.3,0,Math.PI*2);c.fill();
+}
+
+if(heroTheme.horn==="horns"){
+c.fillStyle="#ffd166";
+for(const s of [-1,1]){
+c.beginPath();c.arc(hx-d.x*3-d.y*7*s,hy-d.y*3+d.x*7*s,3.2,0,Math.PI*2);c.fill();
+}
+}else if(heroTheme.horn==="visor"){
+c.strokeStyle="#00f5d4";c.lineWidth=2.5;
+c.beginPath();
+c.moveTo(hx+d.x*4-d.y*6,hy+d.y*4+d.x*6);
+c.lineTo(hx+d.x*4+d.y*6,hy+d.y*4-d.x*6);
+c.stroke();
+}else if(heroTheme.horn==="crown"){
+c.fillStyle="#ffd166";
+c.beginPath();c.arc(hx-d.x*2,hy-d.y*2,3.4,0,Math.PI*2);c.fill();
+}else if(heroTheme.horn==="icecrown"){
+c.fillStyle="#caf0f8";
+for(const s of [-1,0,1]){
+c.beginPath();c.arc(hx-d.x*4-d.y*5*s,hy-d.y*4+d.x*5*s,2.6,0,Math.PI*2);c.fill();
+}
+}else if(heroTheme.horn==="antenna"){
+c.strokeStyle="#ffd166";c.lineWidth=1.8;
+for(const s of [-1,1]){
+c.beginPath();c.moveTo(hx,hy);c.lineTo(hx+d.x*5-d.y*8*s,hy+d.y*5+d.x*8*s);c.stroke();
+}
+}else if(heroTheme.horn==="wings"){
+c.fillStyle="#ff4d6d";
+for(const s of [-1,1]){
+c.beginPath();c.arc(hx-d.x*4-d.y*9*s,hy-d.y*4+d.x*9*s,3.8,0,Math.PI*2);c.fill();
+}
+}else if(heroTheme.horn==="halo"){
+c.strokeStyle="#ffd166";c.lineWidth=2;
+c.beginPath();c.arc(hx,hy,13.5+pulseWave*1.2,0,Math.PI*2);c.stroke();
+}else{
+const tongue=4+Math.sin(this.anim/70)*2.5;
+c.strokeStyle="#ff4d6d";c.lineWidth=1.6;
+c.beginPath();
+c.moveTo(hx+d.x*9,hy+d.y*9);
+c.lineTo(hx+d.x*(10+tongue),hy+d.y*(10+tongue));
+c.stroke();
+}
+
+if(g.shields>0){
+c.strokeStyle="#43d9ffaa";c.lineWidth=2.2;
+c.beginPath();c.arc(hx,hy,14.5+pulseWave*1,0,Math.PI*2);c.stroke();
+}
+
+this.drawHealthBar(c,hx,hy-17,26,4,g.hp,g.maxHp,"#55f5a5");
+
+c.font="bold 11px system-ui";c.textAlign="center";
+for(let i=this.popups.length-1;i>=0;i--){
+const pop=this.popups[i];
+pop.y+=pop.vy;pop.life--;
+if(pop.life<=0){this.popups.splice(i,1);continue}
+c.fillStyle=pop.color;
+c.fillText(pop.text,pop.x,pop.y);
+}
+
+c.restore();
+}
 }
 new SnakeRogue();
 </script></body></html>
