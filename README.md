@@ -108,7 +108,7 @@ O projeto utiliza uma estrutura simples, concentrada em um único arquivo HTML.
 
 Não é necessário instalar dependências, configurar servidores ou utilizar ferramentas adicionais.
 
-1. Baixe o arquivo `snake-rogue-dungeon.html`.
+1. Baixe o arquivo `index.html`.
 2. Localize o arquivo no computador.
 3. Abra-o com dois cliques.
 4. Escolha começar a aventura.
